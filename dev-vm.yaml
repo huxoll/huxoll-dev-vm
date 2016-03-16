@@ -13,6 +13,7 @@
         - network-manager-openconnect
         - vim
         - git
+        - docker-engine
 
       personal_bin: '{{ansible_env.HOME}}/bin'
 
@@ -24,12 +25,12 @@
 
     - name: Install docker apt repo key
       sudo: yes
-      apt_key: keyserver=hkp://p80.pool.sks-keyservers.net:80 id=36A1D7869245C8950F966E92D8576A8BA88D21E9
+      apt_key: keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D
       when: ansible_distribution_version == '14.04'
 
     - name: Install docker apt repo
       sudo: yes
-      apt_repository: repo='deb https://get.docker.com/ubuntu docker main' update_cache=no
+      apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-trusty main' update_cache=yes
       when: ansible_distribution_version == '14.04'
 
     - name: Install docker.io for Ubuntu 15 users
@@ -40,9 +41,10 @@
     - name: Install apt packages
       sudo: yes
       apt: pkg={{ item }} state=present 
-      with_items: apt_package_list
+      with_items: "{{apt_package_list}}"
 
     - name: Copy gitconfig file
+      sudo: yes
       copy: src=files/gitconfig dest=/etc/gitconfig
 
     - name: Start Docker service
@@ -52,8 +54,10 @@
     - name: Add local bin folder for helper scripts
       file: path={{personal_bin}} state=directory
 
-    - name: Copy jboss.sh
-      copy: src=files/jboss.sh dest={{ansible_env.HOME}}/bin/jboss.sh mode=u=rwx
+    - name: Copy xgrep
+      copy: src={{ item }} dest={{ansible_env.HOME}}/bin/ mode=u=rwx
+      with_fileglob:
+      - files/*grep
 
     - name: Make sure ~/bin is in PATH
       lineinfile: dest={{ansible_env.HOME}}/.bashrc regexp="^export PATH=.*{{personal_bin}}" line='export PATH={{personal_bin}}:$PATH'

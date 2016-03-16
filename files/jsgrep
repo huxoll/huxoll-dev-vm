@@ -1,0 +1,14 @@
+#!/bin/sh
+while getopts h opt
+do      case "$opt" in
+        d)      seplist="$OPTARG";;
+        s)      paste=hpaste;;
+        h)      echo >&2 "Usage: $0 [-h] search-text ..."
+                exit 1;;
+        #[?])   grep_opts="$grep_opts $opt";;
+        esac
+done
+#shift $OPTIND-1
+
+# perform actual command
+find . -name "*.js" -type f -print0 | xargs -0 grep $@ | grep -v jquery | grep -v node_modules | grep -v vendor | grep -v .min.js
