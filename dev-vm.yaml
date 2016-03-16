@@ -61,3 +61,6 @@
 
     - name: Make sure ~/bin is in PATH
       lineinfile: dest={{ansible_env.HOME}}/.bashrc regexp="^export PATH=.*{{personal_bin}}" line='export PATH={{personal_bin}}:$PATH'
+
+    - name: Copy inputrc file
+      copy: src=files/inputrc dest={{ansible_env.HOME}}/.inputrc
