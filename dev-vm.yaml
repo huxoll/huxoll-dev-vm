@@ -33,10 +33,10 @@
       apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-trusty main' update_cache=yes
       when: ansible_distribution_version == '14.04'
 
-    - name: Install docker.io for Ubuntu 15 users
+    - name: Install docker.io for Ubuntu 16 users
       sudo: yes
       apt: pkg=docker.io state=latest 
-      when: ansible_distribution_version == '15.04'
+      when: ansible_distribution_version >= '15.04'
 
     - name: Install apt packages
       sudo: yes
