@@ -13,7 +13,6 @@
         - network-manager-openconnect
         - vim
         - git
-        - docker-engine
 
       personal_bin: '{{ansible_env.HOME}}/bin'
 
@@ -33,9 +32,14 @@
       apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-trusty main' update_cache=yes
       when: ansible_distribution_version == '14.04'
 
-    - name: Install docker.io for Ubuntu 16 users
+    - name: Install docker.io for Ubuntu 15,16 vms
       sudo: yes
       apt: pkg=docker.io state=latest 
+      when: ansible_distribution_version >= '15.04'
+
+    - name: Install docker-engine for Ubuntu 14 vms
+      sudo: yes
+      apt: pkg=docker-engine state=latest 
       when: ansible_distribution_version >= '15.04'
 
     - name: Install apt packages
