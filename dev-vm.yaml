@@ -68,3 +68,6 @@
 
     - name: Copy inputrc file
       copy: src=files/inputrc dest={{ansible_env.HOME}}/.inputrc
+
+    - name: Install gitconfig for user from template.
+      template: src=templates/gitconfig.j2 dest={{ansible_env.HOME}}/.gitconfig
