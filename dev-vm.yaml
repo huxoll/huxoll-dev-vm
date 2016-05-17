@@ -40,7 +40,7 @@
     - name: Install docker-engine for Ubuntu 14 vms
       sudo: yes
       apt: pkg=docker-engine state=latest 
-      when: ansible_distribution_version >= '15.04'
+      when: ansible_distribution_version == '14.04'
 
     - name: Install apt packages
       sudo: yes
