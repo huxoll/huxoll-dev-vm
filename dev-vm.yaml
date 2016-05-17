@@ -13,6 +13,7 @@
         - network-manager-openconnect
         - vim
         - git
+        - byobu
 
       personal_bin: '{{ansible_env.HOME}}/bin'
 
@@ -71,3 +72,11 @@
 
     - name: Install gitconfig for user from template.
       template: src=templates/gitconfig.j2 dest={{ansible_env.HOME}}/.gitconfig
+
+    - name: Passwordless sudo (it's a VM, relax)
+      lineinfile:
+        dest: /etc/sudoers.d/me
+        create: yes
+        regexp: "{{ ansible_user_id }}        ALL=(ALL:ALL) NOPASSWD: ALL"
+        line: "{{ ansible_user_id }}        ALL=(ALL:ALL) NOPASSWD: ALL"
+      become: yes
