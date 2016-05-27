@@ -1,7 +1,7 @@
 ---
   - hosts: localhost
     connection: local
-    sudo: no
+    become: no
 
     vars:
       apt_package_list:
@@ -19,41 +19,41 @@
 
     tasks:
     - name: Remove old Docker.io
-      sudo: yes
+      become: yes
       apt: pkg=docker.io state=absent
       when: ansible_distribution_version == '14.04'
 
     - name: Install docker apt repo key
-      sudo: yes
+      become: yes
       apt_key: keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D
       when: ansible_distribution_version == '14.04'
 
     - name: Install docker apt repo
-      sudo: yes
+      become: yes
       apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-trusty main' update_cache=yes
       when: ansible_distribution_version == '14.04'
 
     - name: Install docker.io for Ubuntu 15,16 vms
-      sudo: yes
+      become: yes
       apt: pkg=docker.io state=latest 
       when: ansible_distribution_version >= '15.04'
 
     - name: Install docker-engine for Ubuntu 14 vms
-      sudo: yes
+      become: yes
       apt: pkg=docker-engine state=latest 
       when: ansible_distribution_version == '14.04'
 
     - name: Install apt packages
-      sudo: yes
+      become: yes
       apt: pkg={{ item }} state=present 
       with_items: "{{apt_package_list}}"
 
     - name: Copy gitconfig file
-      sudo: yes
+      become: yes
       copy: src=files/gitconfig dest=/etc/gitconfig
 
     - name: Start Docker service
-      sudo: yes
+      become: yes
       service: name=docker state=started
 
     - name: Add local bin folder for helper scripts
@@ -75,8 +75,9 @@
 
     - name: Passwordless sudo (it's a VM, relax)
       lineinfile:
-        dest: /etc/sudoers.d/me
+        dest: "/etc/sudoers.d/{{ ansible_user_id }}"
         create: yes
-        regexp: "{{ ansible_user_id }}        ALL=(ALL:ALL) NOPASSWD: ALL"
+        regexp: "^.*ALL=(ALL:ALL) NOPASSWD: ALL"
         line: "{{ ansible_user_id }}        ALL=(ALL:ALL) NOPASSWD: ALL"
+        validate: 'visudo -cf %s'
       become: yes
