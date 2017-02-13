@@ -21,32 +21,33 @@
     - name: Remove old Docker.io
       become: yes
       apt: pkg=docker.io state=absent
-      when: ansible_distribution_version == '14.04'
+      when: ansible_distribution_version == '14.04' and docker == true
 
     - name: Install docker apt repo key
       become: yes
       apt_key: keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D
-      when: ansible_distribution_version == '14.04'
+      when: ansible_distribution_version == '14.04' and docker == true
 
     - name: Install docker apt repo
       become: yes
       apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-trusty main' update_cache=yes
-      when: ansible_distribution_version == '14.04'
+      when: ansible_distribution_version == '14.04' and docker == true
 
     - name: Install docker.io for Ubuntu 15,16 vms
       become: yes
       apt: pkg=docker.io state=latest 
-      when: ansible_distribution_version >= '15.04'
+      when: ansible_distribution_version >= '15.04' and docker == true
 
     - name: Install docker-engine for Ubuntu 14 vms
       become: yes
       apt: pkg=docker-engine state=latest 
-      when: ansible_distribution_version == '14.04'
+      when: ansible_distribution_version == '14.04' and docker == true
 
     - name: Install apt packages
       become: yes
       apt: pkg={{ item }} state=present 
       with_items: "{{apt_package_list}}"
+      when: ansible_distribution_version == '14.04' and docker == true
 
     - name: Copy gitconfig file
       become: yes
@@ -55,6 +56,7 @@
     - name: Start Docker service
       become: yes
       service: name=docker state=started
+      when: docker == true
 
     - name: Add local bin folder for helper scripts
       file: path={{personal_bin}} state=directory
