@@ -1,0 +1,14 @@
+version: '3'
+services:
+  node:
+    build:
+      context: ../../code
+      dockerfile: ./Dockerfile
+    command: /bin/bash
+    ports:
+    - "5000:5000"
+    volumes:
+    - ../../code:/code
+    - logvolume01:/var/log
+volumes:
+  logvolume01: {}
