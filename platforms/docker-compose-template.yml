@@ -1,14 +1,16 @@
 version: '3'
 services:
-  node:
+  ${platform}:
     build:
-      context: ../../code
-      dockerfile: ./Dockerfile
+      context: ${work_dir}
+      dockerfile: Dockerfile.dev
     command: /bin/bash
     ports:
     - "5000:5000"
     volumes:
-    - ../../code:/code
+    - ${work_dir}:/code
     - logvolume01:/var/log
+    stdin_open: true
+    tty: true
 volumes:
   logvolume01: {}
