@@ -3,7 +3,7 @@
 set -e # fail immediately if there\'s a problem
 
 # use `git-up` if installed
-if type git-up > /dev/null 2>&1
+if type xxxgit-up > /dev/null 2>&1
 then
   exec git-up
 fi
@@ -25,6 +25,7 @@ fi
 # create a temp file for capturing command output
 TEMPFILE="`mktemp -t gup.XXXXXX`"
 trap '{ rm -f "$TEMPFILE"; }' EXIT
+[[ -n $VERBOSE ]] && echo "Using tempfile $TEMPFILE..."
 
 # if we're behind upstream, we need to update
 if git status | grep "# Your branch" > "$TEMPFILE"
@@ -66,5 +67,6 @@ then
   then
     git stash pop
   fi
-
+else
+  [[ -n $VERBOSE ]] && echo "No changes on server."
 fi
