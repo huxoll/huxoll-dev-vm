@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e # fail immediately if there's a problem
+set -e # fail immediately if there\'s a problem
 
 # use `git-up` if installed
 if type git-up > /dev/null 2>&1
@@ -9,6 +9,7 @@ then
 fi
 
 # fetch upstream changes
+[[ -n $VERBOSE ]] && echo "Running fetch..."
 git fetch
 
 BRANCH=$(git symbolic-ref -q HEAD)
@@ -52,9 +53,11 @@ then
   if [ "$CAN_FF" -ne 0 ]
   then
     # if nothing has changed locally, just fast foward.
+    [[ -n $VERBOSE ]] && echo "Merge (fast forward)..."
     git merge --ff "$UPSTREAM"
   else
     # rebase our changes on top of upstream, but keep any merges
+    [[ -n $VERBOSE ]] && echo "Rebasing..."
     git rebase -p "$UPSTREAM"
   fi
 
