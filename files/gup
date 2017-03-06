@@ -3,7 +3,7 @@
 set -e # fail immediately if there\'s a problem
 
 # use `git-up` if installed
-if type xxxgit-up > /dev/null 2>&1
+if type git-up > /dev/null 2>&1
 then
   exec git-up
 fi
@@ -28,7 +28,7 @@ trap '{ rm -f "$TEMPFILE"; }' EXIT
 [[ -n $VERBOSE ]] && echo "Using tempfile $TEMPFILE..."
 
 # if we're behind upstream, we need to update
-if git status | grep "# Your branch" > "$TEMPFILE"
+if git status | grep "Your branch is behind " > "$TEMPFILE"
 then
 
   # extract tracking branch from message
@@ -38,6 +38,8 @@ then
     echo Could not detect upstream branch >&2
     exit 1
   fi
+
+  [[ -n $VERBOSE ]] && echo "Updating tracking branch for $UPSTREAM..."
 
   # can we fast-forward?
   CAN_FF=1
@@ -50,6 +52,8 @@ then
   # take note if anything was stashed
   HAVE_STASH=0
   grep -q "No local changes" "$TEMPFILE" || HAVE_STASH=1
+
+  [[ -n $VERBOSE ]] && echo "Stash? $HAVE_STASH, CAN_FF? $CAN_FF."
 
   if [ "$CAN_FF" -ne 0 ]
   then
@@ -67,6 +71,5 @@ then
   then
     git stash pop
   fi
-else
-  [[ -n $VERBOSE ]] && echo "No changes on server."
+
 fi
