@@ -124,9 +124,9 @@ OPTIND=1
 [[ -z ${platform} ]] && usage
 [[ -n ${verbose} ]] && echo "Using platform ${platform}."
 
-if [[ ! -d platforms/${platform} ]]; then
+if [[ ! -f platforms/${platform}.yml ]]; then
     echo "Unhandled platform ${platform}"
-    echo "'platforms/${platform}' does not exist."
+    echo "'platforms/${platform}.yml' does not exist."
     exit 2
 else
     echo "Using platform ${platform} from platforms/${platform}"
