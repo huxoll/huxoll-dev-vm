@@ -1,7 +1,7 @@
 # huxoll-dev-vm
 My personal DevVM configuration and tools.
 
-Assumes Ansible is installed, on a Linux box.
+Assumes Ansible is installed, on a Linux or OSX workstation.
 
 If ansible is not installed, try this:
 (Ubuntu 14.04)
