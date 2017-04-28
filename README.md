@@ -29,4 +29,5 @@ There you have it, some basic development tools on a box or virtual machine.
 * Git config with some useful aliases
 * Specialized grep wrappers for searching in code (htmlgrep for HTML, pygrep for Python, jsgrep for JS, etc.)
 * Useful inputrc options (who ever wants a case sensitive file completion? Pff.)
+* tmux customizations
 
