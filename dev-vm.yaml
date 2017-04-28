@@ -10,10 +10,9 @@
         - gzip
         - pbzip2
         - unzip
-        - network-manager-openconnect
         - vim
         - git
-        - byobu
+        - zip
 
       personal_bin: '{{ansible_env.HOME}}/bin'
 
@@ -98,3 +97,18 @@
     - name: Install tmuxinator
       gem: name=tmuxinator state=present
       when: ruby == true
+
+    - name: Download Powerline font for fancy terminal doodads
+      get_url:
+        url: "https://github.com/powerline/fonts/blob/master/Hack/Hack-Regular.ttf"
+        dest: "{{ansible_env.HOME}}/Hack-Regular.ttf"
+      when: ansible_distribution == "MacOSX"
+
+    - name: Install a font
+      command: "open {{ansible_env.HOME}}/Hack-Regular.ttf"
+      when: ansible_distribution == "MacOSX"
+
+    - name: Install a font guidance
+      debug:
+        msg: If you wish to use it, install the provided font into OSX and select in iTerm preferences.
+      when: ansible_distribution == "MacOSX"
