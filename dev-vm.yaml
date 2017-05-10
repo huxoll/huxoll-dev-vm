@@ -13,6 +13,13 @@
         - vim
         - git
         - zip
+      homebrew_package_list:
+        - node
+        - tmux
+      homebrew_cask_package_list:
+        - xquartz
+        - tmux
+        - atom
 
       personal_bin: '{{ansible_env.HOME}}/bin'
 
@@ -48,9 +55,27 @@
       with_items: "{{apt_package_list}}"
       when: ansible_distribution_version == '14.04' and docker == true
 
+    - name: Check if homebrew is installed
+      shell: brew list
+      register: homebrew_installed
+
+    - name: Ensure homebrew is installed
+      command: /usr/bin/ruby -e "curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install"
+      when: ansible_distribution == "MacOSX" and homebrew_installed.rc != 0
+
+    - name: Install homebrew packages
+      homebrew: name={{ item }} state=present
+      with_items: "{{homebrew_package_list}}"
+      when: ansible_distribution == "MacOSX"
+
+    - name: Install homebrew cask packages
+      command: brew cask install {{ item }}
+      with_items: "{{homebrew_cask_package_list}}"
+      when: ansible_distribution == "NOT_WORKING_YET"
+
     - name: Copy gitconfig file
       become: yes
-      copy: src=files/gitconfig dest=/etc/gitconfig
+      copy: src=files/gitconfig dest=/etc/gitconfig backup=yes
 
     - name: Start Docker service
       become: yes
@@ -111,4 +136,38 @@
     - name: Install a font guidance
       debug:
         msg: If you wish to use it, install the provided font into OSX and select in iTerm preferences.
+      when: ansible_distribution == "MacOSX"
+
+    - name: Decorate prompt with git status (Linux)
+      git:
+        repo: 'https://github.com/magicmonty/bash-git-prompt.git'
+        dest: "{{ansible_env.HOME}}/.bash-git-prompt"
+        depth: 1
+      when: ansible_distribution != "MacOSX"
+
+    - name: Add gitprompt to bashrc
+      blockinfile:
+        dest: "{{ansible_env.HOME}}/.bashrc"
+        marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+        content: |
+          GIT_PROMPT_ONLY_IN_REPO=1
+          source ~/.bash-git-prompt/gitprompt.sh
+      when: ansible_distribution != "MacOSX"
+
+    - name: Decorate prompt with git status (OSX)
+      homebrew:
+        name: bash-git-prompt
+        state: present
+      when: ansible_distribution == "MacOSX"
+
+    - name: Add gitprompt to bashrc
+      blockinfile:
+        dest: "{{ansible_env.HOME}}/.bashrc"
+        marker: "<!-- {mark} Ansible gitprompt -->"
+        content: |
+          if [ -f "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh" ]; then
+            GIT_PROMPT_ONLY_IN_REPO=1
+            __GIT_PROMPT_DIR=$(brew --prefix)/opt/bash-git-prompt/share
+            source "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh"
+          fi
       when: ansible_distribution == "MacOSX"
