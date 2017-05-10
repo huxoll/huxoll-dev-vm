@@ -17,8 +17,7 @@
         - node
         - tmux
       homebrew_cask_package_list:
-        - xquartz
-        - tmux
+        - sublime-text
         - atom
 
       personal_bin: '{{ansible_env.HOME}}/bin'
@@ -71,7 +70,7 @@
     - name: Install homebrew cask packages
       command: brew cask install {{ item }}
       with_items: "{{homebrew_cask_package_list}}"
-      when: ansible_distribution == "NOT_WORKING_YET"
+      when: ansible_distribution == "MacOSX"
 
     - name: Copy gitconfig file
       become: yes
@@ -171,3 +170,18 @@
             source "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh"
           fi
       when: ansible_distribution == "MacOSX"
+
+    - name: Get rmate utility as rsub
+      get_url:
+        url: "https://raw.github.com/aurora/rmate/master/rmate"
+        dest: "{{ansible_env.HOME}}/bin/rsub"
+        mode: u+x
+      when: ansible_distribution != "MacOSX"
+
+    - name: Add Sublime remote editing alias
+      blockinfile:
+        dest: "{{ansible_env.HOME}}/.bashrc"
+        marker: "<!-- {mark} Ansible aliases -->"
+        content: |
+          alias e="rsub"
+      when: ansible_distribution != "MacOSX"
