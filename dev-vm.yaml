@@ -57,6 +57,7 @@
     - name: Check if homebrew is installed
       shell: brew list
       register: homebrew_installed
+      when: ansible_distribution == "MacOSX"
 
     - name: Ensure homebrew is installed
       command: /usr/bin/ruby -e "curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install"
@@ -147,7 +148,7 @@
     - name: Add gitprompt to bashrc
       blockinfile:
         dest: "{{ansible_env.HOME}}/.bashrc"
-        marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+        marker: "## {mark} Ansible gitprompt"
         content: |
           GIT_PROMPT_ONLY_IN_REPO=1
           source ~/.bash-git-prompt/gitprompt.sh
@@ -162,7 +163,7 @@
     - name: Add gitprompt to bashrc
       blockinfile:
         dest: "{{ansible_env.HOME}}/.bashrc"
-        marker: "<!-- {mark} Ansible gitprompt -->"
+        marker: "## {mark} Ansible gitprompt"
         content: |
           if [ -f "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh" ]; then
             GIT_PROMPT_ONLY_IN_REPO=1
@@ -181,7 +182,7 @@
     - name: Add Sublime remote editing alias
       blockinfile:
         dest: "{{ansible_env.HOME}}/.bashrc"
-        marker: "<!-- {mark} Ansible aliases -->"
+        marker: "## {mark} Ansible aliases"
         content: |
           alias e="rsub"
       when: ansible_distribution != "MacOSX"
