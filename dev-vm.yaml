@@ -186,3 +186,8 @@
         content: |
           alias e="rsub"
       when: ansible_distribution != "MacOSX"
+
+    - name: Install pry shortcuts.
+      copy: src=files/pryrc dest={{ansible_env.HOME}}/.pryrc mode=u=rwx
+      when: ruby == true
+
