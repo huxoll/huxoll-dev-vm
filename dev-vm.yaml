@@ -93,6 +93,13 @@
     - name: Copy gup
       copy: src=files/gup dest={{ansible_env.HOME}}/bin/ mode=u=rwx
 
+    - name: ensure .bashrc exists
+      copy:
+        content: "# startup file for bash shell"
+        dest: "{{ansible_env.HOME}}/.bashrc"
+        force: no
+        mode: 0500
+
     - name: Make sure ~/bin is in PATH
       lineinfile: dest={{ansible_env.HOME}}/.bashrc regexp="^export PATH=.*{{personal_bin}}" line='export PATH={{personal_bin}}:$PATH'
 
@@ -102,7 +109,7 @@
     - name: Install gitconfig for user from template.
       template: src=templates/gitconfig.j2 dest={{ansible_env.HOME}}/.gitconfig force=no
 
-    - name: Passwordless sudo (it's a VM, relax)
+    - name: Passwordless sudo (it's a VM or dev box, relax)
       lineinfile:
         dest: "/etc/sudoers.d/{{ ansible_user_id }}"
         create: yes
@@ -190,4 +197,3 @@
     - name: Install pry shortcuts.
       copy: src=files/pryrc dest={{ansible_env.HOME}}/.pryrc mode=u=rwx
       when: ruby == true
-
