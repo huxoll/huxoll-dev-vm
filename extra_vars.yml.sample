@@ -1,0 +1,33 @@
+# Extra vars
+# Override the package list if you don't like mine.
+# apt_package_list:
+#   - other
+#   - cool
+#   - stuff
+
+# Or add more
+additional_apt_packages: []
+
+# Override the package list if you don't like mine.
+# homebrew_package_list:
+#   - other
+#   - cool
+#   - stuff
+
+# Or add more
+additional_homebrew_packages: []
+
+# Homebrew casks for OSX applications to install
+# homebrew_cask_package_list:
+#   - other
+#   - cool
+#   - stuff
+
+# Or add more
+additional_cask_packages: []
+
+# Things you might want to turn off
+docker: true
+ruby: true
+google_cloud: true
+get_fonts: true

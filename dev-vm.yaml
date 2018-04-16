@@ -13,46 +13,77 @@
         - vim
         - git
         - zip
+        - sudo
       homebrew_package_list:
         - node
         - tmux
+        - gnu-tar
+        - go
+        - kubectl
+        - bash-completion
       homebrew_cask_package_list:
+        - java
         - sublime-text
         - atom
+        - google-chrome
+        - iterm2
+        - slack
+        - istat-menus
+        - zoomus
+        - lastpass
+        - meld
+        - vagrant
+        - virtualbox
+        - evernote
 
       personal_bin: '{{ansible_env.HOME}}/bin'
+      get_fonts: true
+      docker: true
+      ruby: true
+      google_cloud: true
+      workplace: 'Job'
+      projects_dir: '{{ansible_env.HOME}}/Projects'
+      projects_dir_personal: '{{projects_dir}}/Personal'
+      projects_dir_work: '{{projects_dir}}/Work'
 
     tasks:
     - name: Remove old Docker.io
       become: yes
       apt: pkg=docker.io state=absent
-      when: ansible_distribution_version == '14.04' and docker == true
+      when: ansible_distribution_version == '14.04' and docker
 
     - name: Install docker apt repo key
       become: yes
       apt_key: keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D
-      when: ansible_distribution_version == '14.04' and docker == true
+      when: ansible_distribution_version == '14.04' and docker
 
     - name: Install docker apt repo
       become: yes
       apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-trusty main' update_cache=yes
-      when: ansible_distribution_version == '14.04' and docker == true
+      when: ansible_distribution_version == '14.04' and docker
 
     - name: Install docker.io for Ubuntu 15,16 vms
       become: yes
       apt: pkg=docker.io state=latest
-      when: ansible_distribution_version >= '15.04' and docker == true
+      when: ansible_distribution_version >= '15.04' and docker
 
     - name: Install docker-engine for Ubuntu 14 vms
       become: yes
       apt: pkg=docker-engine state=latest
-      when: ansible_distribution_version == '14.04' and docker == true
+      when: ansible_distribution_version == '14.04' and docker
 
     - name: Install apt packages
       become: yes
       apt: pkg={{ item }} state=present
       with_items: "{{apt_package_list}}"
-      when: ansible_distribution_version == '14.04' and docker == true
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+    - name: Install apt additional packages, if any
+      apt: pkg={{ item }} state=present
+      with_items: "{{additional_apt_packages}}"
+      when:
+        - ansible_distribution_version == '14.04'
+        - additional_apt_packages is defined
 
     - name: Check if homebrew is installed
       shell: brew list
@@ -68,10 +99,28 @@
       with_items: "{{homebrew_package_list}}"
       when: ansible_distribution == "MacOSX"
 
+    - name: Install homebrew additional packages, if any
+      homebrew: name={{ item }} state=present
+      with_items: "{{additional_homebrew_packages}}"
+      when:
+        - ansible_distribution == "MacOSX"
+        - additional_homebrew_packages is defined
+
     - name: Install homebrew cask packages
       command: brew cask install {{ item }}
       with_items: "{{homebrew_cask_package_list}}"
       when: ansible_distribution == "MacOSX"
+
+    - name: Install additional homebrew cask packages, if any
+      command: brew cask install {{ item }}
+      with_items: "{{additional_cask_packages}}"
+      when:
+        - ansible_distribution == "MacOSX"
+        - additional_cask_packages is defined
+
+    - name: Install homebrew docker
+      homebrew: name=docker state=present
+      when: ansible_distribution == "MacOSX" and docker
 
     - name: Copy gitconfig file
       become: yes
@@ -80,7 +129,7 @@
     - name: Start Docker service
       become: yes
       service: name=docker state=started
-      when: docker == true
+      when: ansible_distribution != "MacOSX" and docker
 
     - name: Add local bin folder for helper scripts
       file: path={{personal_bin}} state=directory
@@ -98,7 +147,24 @@
         content: "# startup file for bash shell"
         dest: "{{ansible_env.HOME}}/.bashrc"
         force: no
-        mode: 0500
+        mode: 0600
+
+    - name: ensure .bashrc is loaded by .bash_profile
+      copy:
+        content: |
+          # .bash_profile
+          if [ -f ~/.bashrc ]; then
+            source ~/.bashrc
+          fi
+        dest: "{{ansible_env.HOME}}/.bash_profile"
+        force: no
+        mode: 0600
+
+    - name: Bash completion
+      lineinfile:
+        dest: "{{ansible_env.HOME}}/.bash_profile"
+        regexp: "^.*. /usr/local/etc/bash_completion"
+        line: "[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion"
 
     - name: Make sure ~/bin is in PATH
       lineinfile: dest={{ansible_env.HOME}}/.bashrc regexp="^export PATH=.*{{personal_bin}}" line='export PATH={{personal_bin}}:$PATH'
@@ -126,24 +192,30 @@
     - name: Copy tmux local customizations
       copy: src=files/tmux.conf.local dest={{ansible_env.HOME}}/.tmux.conf.local
 
+    - name: Install apt packages
+      become: yes
+      package: name=ruby-full state=present
+      when:
+        - ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+        - ruby
+
     - name: Install tmuxinator
       gem: name=tmuxinator state=present
-      when: ruby == true
+      when: ruby
 
     - name: Download Powerline font for fancy terminal doodads
-      get_url:
-        url: "https://github.com/powerline/fonts/blob/master/Hack/Hack-Regular.ttf"
-        dest: "{{ansible_env.HOME}}/Hack-Regular.ttf"
-      when: ansible_distribution == "MacOSX"
-
-    - name: Install a font
-      command: "open {{ansible_env.HOME}}/Hack-Regular.ttf"
-      when: ansible_distribution == "MacOSX"
-
-    - name: Install a font guidance
-      debug:
-        msg: If you wish to use it, install the provided font into OSX and select in iTerm preferences.
-      when: ansible_distribution == "MacOSX"
+      block:
+        - get_url:
+            url: "https://github.com/powerline/fonts/blob/master/Hack/Hack-Regular.ttf?raw=true"
+            dest: "{{ansible_env.HOME}}/Hack.ttf"
+        - name: Install a font
+          command: "open {{ansible_env.HOME}}/Hack.ttf"
+        - name: Install a font guidance
+          debug:
+            msg: If you wish to use it, install the provided font into OSX and select in iTerm preferences.
+      when:
+        - ansible_distribution == "MacOSX"
+        - get_fonts
 
     - name: Decorate prompt with git status (Linux)
       git:
@@ -179,6 +251,40 @@
           fi
       when: ansible_distribution == "MacOSX"
 
+    - name: Add z utility
+      block:
+        - get_url:
+            url: "https://raw.github.com/rupa/z/master/z.sh"
+            dest: "{{ansible_env.HOME}}/bin/z.sh"
+            mode: u+x
+        - name: Add z.sh to startup
+          lineinfile: dest={{ansible_env.HOME}}/.bashrc regexp="^. {{personal_bin}}/z.sh" line='. {{personal_bin}}/z.sh'
+
+    - name: Get google cloud SDK
+      block:
+        - get_url:
+            url: https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-197.0.0-darwin-x86_64.tar.gz
+            dest: "{{ansible_env.HOME}}/google-cloud-sdk.tar.gz"
+        - unarchive:
+            src: "{{ansible_env.HOME}}/google-cloud-sdk.tar.gz"
+            dest: "{{ansible_env.HOME}}"
+        - command: "{{ansible_env.HOME}}/google-cloud-sdk/install.sh"
+        - lineinfile:
+            dest: "{{ansible_env.HOME}}/.bash_profile"
+            regexp: "^source '{{ansible_env.HOME}}/google-cloud-sdk/path.bash.inc'"
+            line: "source '{{ansible_env.HOME}}/google-cloud-sdk/path.bash.inc'"
+        - lineinfile:
+            dest: "{{ansible_env.HOME}}/.bash_profile"
+            regexp: "^source '{{ansible_env.HOME}}/google-cloud-sdk/completion.bash.inc'"
+            line: "source '{{ansible_env.HOME}}/google-cloud-sdk/completion.bash.inc'"
+      when: google_cloud
+
+    - name: Get google repo
+      get_url:
+        url: https://storage.googleapis.com/git-repo-downloads/repo
+        dest: "{{ansible_env.HOME}}/bin/repo"
+        mode: u+x
+
     - name: Get rmate utility as rsub
       get_url:
         url: "https://raw.github.com/aurora/rmate/master/rmate"
@@ -196,4 +302,4 @@
 
     - name: Install pry shortcuts.
       copy: src=files/pryrc dest={{ansible_env.HOME}}/.pryrc mode=u=rwx
-      when: ruby == true
+      when: ruby

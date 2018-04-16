@@ -10,7 +10,7 @@ modified.
 
 I rely on Homebrew, so it should be installed. See: https://brew.sh
 
-Homebrew will also install the XCode command line tools if not alreay installed.
+Homebrew will also install the XCode command line tools if not already installed.
 
 # Prerequisites (General) #
 
@@ -36,7 +36,8 @@ brew install ansible
 * (Or, clone the repo via SSSH: `git clone git@github.com:huxoll/huxoll-dev-vm.git` with appropriate SSH key)
 * Change to the directory: `cd huxoll-dev-vm`
 * Copy the example inventory file and customize variables: `cp inventory.sample inventory && vi inventory`
-* Run `ansible-playbook -i inventory -K dev-vm.yaml`, enter your user's password when prompted so it can sudo.
+* Copy the example extra variables file and customize variables if you wish: `cp extra_vars.yml.sample extra_vars.yml && vi extra_vars.yml`
+* Run `ansible-playbook -i inventory --extra-vars "@extra_vars.yml" dev-vm.yaml -K`, enter your user's password when prompted so it can sudo.
 * Source your ~/.bashrc to pick up new environment settings: `. ~/.bashrc`
 
 There you have it, some basic development tools on a box or virtual machine.
@@ -48,6 +49,8 @@ There you have it, some basic development tools on a box or virtual machine.
 * Specialized grep wrappers for searching in code (htmlgrep for HTML, pygrep for Python, jsgrep for JS, etc.)
 * Useful inputrc options (who ever wants a case sensitive file completion? Pff.)
 * tmux customizations
+* command prompt tagged with Git info
+* Interpreters for java, python, ruby, go (by default)
 
 # Target Infrastructure Platforms #
 
