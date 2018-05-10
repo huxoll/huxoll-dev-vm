@@ -6,6 +6,11 @@ as well as on VMs.  You may find it useful as well, I have made some attempt to
 externalize the opinionated/personalized bits to settings that can be easily
 modified.
 
+# Build Status
+
+[![Build Status](https://travis-ci.org/huxoll/huxoll-dev-vm.svg?branch=master)](https://travis-ci.org/huxoll/huxoll-dev-vm)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 # Prerequisites (OSX) #
 
 I rely on Homebrew, so it should be installed. See: https://brew.sh
