@@ -22,19 +22,31 @@
         - kubectl
         - bash-completion
       homebrew_cask_package_list:
+# Interpreters:
         - java
+# Plain text editors:
         - sublime-text
         - atom
+# Browsers:
         - google-chrome
+        - caskroom/versions/firefox-developer-edition
+# IDE:
+        - visual-studio-code
+# General Dev tools:
         - iterm2
         - slack
-        - istat-menus
-        - zoomus
-        - lastpass
         - meld
+# Virtualization and remote access:
         - vagrant
         - virtualbox
+        - microsoft-remote-desktop-beta
+# Every now and then, have to edit an image
+        - gimp
+# Misc:
         - evernote
+
+      homebrew_cask_antivirus: avast-security
+      homebrew_cask_password_vault: lastpass
 
       personal_bin: '{{ansible_env.HOME}}/bin'
       get_fonts: true
@@ -117,6 +129,18 @@
       when:
         - ansible_distribution == "MacOSX"
         - additional_cask_packages is defined
+
+    - name: Add antivirus as homebrew cask package
+      command: brew cask install {{ homebrew_cask_antivirus }}
+      when:
+        - ansible_distribution == "MacOSX"
+        - homebrew_cask_antivirus is defined
+
+    - name: Add password vault as homebrew cask package
+      command: brew cask install {{ homebrew_cask_password_vault }}
+      when:
+        - ansible_distribution == "MacOSX"
+        - homebrew_cask_password_vault is defined
 
     - name: Install homebrew docker
       homebrew: name=docker state=present
