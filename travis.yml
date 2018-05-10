@@ -1,0 +1,10 @@
+language: python
+
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t huxoll-dev-vm .
+  - docker run -it huxoll-dev-vm
