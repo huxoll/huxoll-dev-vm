@@ -1,0 +1,7 @@
+[devs]
+localhost	name="CI Build" email=noreply@example.com ansible_connection=local
+
+# Features to maybe turn off
+[devs:vars]
+  docker=false
+  ruby=true

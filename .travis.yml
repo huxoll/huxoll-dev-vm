@@ -6,5 +6,8 @@ services:
   - docker
 
 before_install:
+  - cp inventory.ci inventory
   - docker build -t huxoll-dev-vm .
+
+script:
   - docker run -it huxoll-dev-vm
