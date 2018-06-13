@@ -21,6 +21,7 @@
         - go
         - kubectl
         - bash-completion
+        - wget
       homebrew_cask_package_list:
 # Interpreters:
         - java
@@ -59,6 +60,12 @@
       projects_dir_work: '{{projects_dir}}/Work'
 
     tasks:
+    - name: Install atom apt repo
+      become: yes
+      apt_repository:
+        repo: ppa:webupd8team/atom
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
     - name: Remove old Docker.io
       become: yes
       apt: pkg=docker.io state=absent
@@ -96,6 +103,11 @@
       when:
         - ansible_distribution_version == '14.04'
         - additional_apt_packages is defined
+
+    - name: Install atom via apt
+      become: yes
+      apt: pkg=atom state=present
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
     - name: Check if homebrew is installed
       shell: brew list
@@ -324,6 +336,11 @@
           alias e="rsub"
       when: ansible_distribution != "MacOSX"
 
-    - name: Install pry shortcuts.
+    - name: Install pry shortcuts
       copy: src=files/pryrc dest={{ansible_env.HOME}}/.pryrc mode=u=rwx
       when: ruby
+
+    - name: Install useful atom packages
+      command: apm install {{ item }}
+      with_items: "{{atom_packages}}"
+      when: atom_packages is defined
