@@ -1,0 +1,12 @@
+#!/bin/sh
+while getopts h opt
+do      case "$opt" in
+        d)      seplist="$OPTARG";;
+        s)      paste=hpaste;;
+        h)      echo >&2 "Usage: $0 [-h] search-text ..."
+                exit 1;;
+        esac
+done
+
+# perform actual command
+find . -name "*.y*ml" -type f -print0 | xargs -0 grep $@

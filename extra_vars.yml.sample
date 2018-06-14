@@ -26,6 +26,11 @@ additional_homebrew_packages: []
 # Or add more
 additional_cask_packages: []
 
+# Atom packages
+atom_packages:
+  - build
+  - git-plus
+
 # Things you might want to turn off
 docker: true
 ruby: true
