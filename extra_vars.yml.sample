@@ -26,6 +26,9 @@ additional_homebrew_packages: []
 # Or add more
 additional_cask_packages: []
 
+# Editor/IDE of choice:
+editor: atom
+
 # Atom packages
 atom_packages:
   - build

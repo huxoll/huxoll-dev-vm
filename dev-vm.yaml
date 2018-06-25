@@ -45,6 +45,7 @@
         - gimp
 # Misc:
         - evernote
+        - vlc
 
       homebrew_cask_antivirus: avast-security
       homebrew_cask_password_vault: lastpass
@@ -64,7 +65,9 @@
       become: yes
       apt_repository:
         repo: ppa:webupd8team/atom
-      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+      when:
+        - ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+        - editor == 'atom'
 
     - name: Remove old Docker.io
       become: yes
@@ -107,7 +110,9 @@
     - name: Install atom via apt
       become: yes
       apt: pkg=atom state=present
-      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+      when:
+        - ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+        - editor == 'atom'
 
     - name: Check if homebrew is installed
       shell: brew list
@@ -116,7 +121,10 @@
 
     - name: Ensure homebrew is installed
       command: /usr/bin/ruby -e "curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install"
-      when: ansible_distribution == "MacOSX" and homebrew_installed.rc != 0
+      when:
+        - ansible_distribution == "MacOSX"
+        - homebrew_installed is changed
+        - homebrew_installed.rc != 0
 
     - name: Install homebrew packages
       homebrew: name={{ item }} state=present

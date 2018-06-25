@@ -23,10 +23,15 @@ Assumes Ansible is installed, on a Linux or OSX workstation.
 
 If ansible is not installed, try this:
 (Ubuntu 14.04)
-```
+``` bash
 sudo apt-add-repository ppa:ansible/ansible
 sudo apt-get update
 sudo apt-get install ansible
+```
+(Ubuntu 16+)
+``` bash
+sudo apt install python-pip
+sudo pip install ansible
 ```
 (OSX)
 ```
