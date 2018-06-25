@@ -84,7 +84,7 @@
       apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-trusty main' update_cache=yes
       when: ansible_distribution_version == '14.04' and docker
 
-    - name: Install docker.io for Ubuntu 15,16 vms
+    - name: Install docker.io for Ubuntu 15+ vms
       become: yes
       apt: pkg=docker.io state=latest
       when: ansible_distribution_version >= '15.04' and docker
@@ -351,4 +351,6 @@
     - name: Install useful atom packages
       command: apm install {{ item }}
       with_items: "{{atom_packages}}"
-      when: atom_packages is defined
+      when:
+        - atom_packages is defined
+        - editor is defined and editor == 'atom'

@@ -30,7 +30,7 @@ sudo apt-get install ansible
 ```
 (Ubuntu 16+)
 ``` bash
-sudo apt install python-pip
+sudo apt install -y python-pip git
 sudo pip install ansible
 ```
 (OSX)
