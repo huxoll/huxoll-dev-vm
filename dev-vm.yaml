@@ -29,7 +29,7 @@
 # Plain text editors:
         - sublime-text
         - atom
-	- visual-studio-code
+        - visual-studio-code
 # Browsers:
         - google-chrome
         - caskroom/versions/firefox-developer-edition
