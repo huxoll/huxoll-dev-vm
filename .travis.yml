@@ -1,4 +1,4 @@
-language: python
+language: generic
 
 os:
   - linux
@@ -9,12 +9,12 @@ addons:
     sources:
       - ppa:ansible/ansible
     packages:
-    - ansible
+    - python python-pip ansible
 
 addons:
   homebrew:
     packages:
-      - ansible
+      - python ansible
 
 before_install:
   - cp inventory.ci inventory
