@@ -41,7 +41,7 @@
         - meld
 # Virtualization and remote access:
         - vagrant
-        - virtualbox
+        #- virtualbox VirtualBox is tricky on recent OSX
         - microsoft-remote-desktop-beta
 # Every now and then, have to edit an image
         - gimp

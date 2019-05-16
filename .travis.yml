@@ -19,6 +19,7 @@ addons:
 before_install:
   - cp inventory.ci inventory
   - cp extra_vars.yml.sample extra_vars.yml
+  - sed -riE "s/^(docker.) true/\1 false/" extra_vars.yml
   - ansible --version
 
 script:
