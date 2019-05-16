@@ -7,7 +7,7 @@ os:
 addons:
   apt:
     sources:
-      - ppa:ansible/ansible
+      - sourceline: 'ppa:ansible/ansible'
     packages:
     - python
     - python-pip
