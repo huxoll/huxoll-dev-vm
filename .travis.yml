@@ -9,14 +9,17 @@ addons:
     sources:
       - ppa:ansible/ansible
     packages:
-    - python python-pip ansible
+    - python
+    - python-pip
+    - ansible
   homebrew:
     packages:
-      - python ansible
+    - ansible
 
 before_install:
   - cp inventory.ci inventory
   - cp extra_vars.yml.sample extra_vars.yml
+  - ansible --version
 
 script:
   - ansible-playbook -i inventory --extra-vars @extra_vars.yml dev-vm.yaml
