@@ -10,8 +10,6 @@ addons:
       - ppa:ansible/ansible
     packages:
     - python python-pip ansible
-
-addons:
   homebrew:
     packages:
       - python ansible
