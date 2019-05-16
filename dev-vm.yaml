@@ -22,12 +22,14 @@
         - kubectl
         - bash-completion
         - wget
+        - watch
       homebrew_cask_package_list:
 # Interpreters:
         - java
 # Plain text editors:
         - sublime-text
         - atom
+	- visual-studio-code
 # Browsers:
         - google-chrome
         - caskroom/versions/firefox-developer-edition
@@ -43,12 +45,13 @@
         - microsoft-remote-desktop-beta
 # Every now and then, have to edit an image
         - gimp
+        - krita
 # Misc:
         - evernote
         - vlc
 
       homebrew_cask_antivirus: avast-security
-      homebrew_cask_password_vault: lastpass
+      homebrew_cask_password_vault: 1password
 
       personal_bin: '{{ansible_env.HOME}}/bin'
       get_fonts: true
@@ -69,7 +72,7 @@
         - ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
         - editor == 'atom'
 
-    - name: Remove old Docker.io
+    - name: Remove old Docker.io (if installed)
       become: yes
       apt: pkg=docker.io state=absent
       when: ansible_distribution_version == '14.04' and docker
@@ -294,6 +297,25 @@
             source "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh"
           fi
       when: ansible_distribution == "MacOSX"
+
+    - name: Add useful aliases
+      blockinfile:
+        dest: "{{ansible_env.HOME}}/.bash_profile"
+        marker: "## {mark} Ansible aliases"
+        content: |
+          alias gpthis='git push origin HEAD:$(git_current_branch)'
+          alias grb='git rebase -p'
+          alias gm='git merge --no-ff'
+          alias glog='git log --oneline --decorate'
+          alias gup='git up'
+
+    - name: Add useful aliases (Linux)
+      blockinfile:
+        dest: "{{ansible_env.HOME}}/.bash_profile"
+        marker: "## {mark} Ansible aliases for linux"
+        content: |
+          alias psc='ps xawf -eo pid,user,cgroup,args'
+      when: ansible_distribution != "MacOSX"
 
     - name: Add z utility
       block:

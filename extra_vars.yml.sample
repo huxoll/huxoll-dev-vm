@@ -33,6 +33,7 @@ editor: atom
 atom_packages:
   - build
   - git-plus
+  - remote-atom
 
 # Things you might want to turn off
 docker: true

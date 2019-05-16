@@ -1,14 +1,24 @@
 language: python
 
-sudo: required
+os:
+  - linux
+  - osx
 
-services:
-  - docker
+addons:
+  apt:
+    sources:
+      - ppa:ansible/ansible
+    packages:
+    - ansible
+
+addons:
+  homebrew:
+    packages:
+      - ansible
 
 before_install:
   - cp inventory.ci inventory
   - cp extra_vars.yml.sample extra_vars.yml
-  - docker build -t huxoll-dev-vm .
 
 script:
-  - docker run -it huxoll-dev-vm
+  - ansible-playbook -i inventory --extra-vars @extra_vars.yml dev-vm.yaml
