@@ -99,8 +99,7 @@
 
     - name: Install apt packages
       become: yes
-      apt: pkg={{ item }} state=present
-      with_items: "{{apt_package_list}}"
+      apt: pkg={{ apt_package_list }} state=present
       when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
     - name: Install apt additional packages, if any
@@ -130,8 +129,7 @@
         - homebrew_installed.rc != 0
 
     - name: Install homebrew packages
-      homebrew: name={{ item }} state=present
-      with_items: "{{homebrew_package_list}}"
+      homebrew: name={{ homebrew_package_list }} state=present
       when: ansible_distribution == "MacOSX"
 
     - name: Install homebrew additional packages, if any
