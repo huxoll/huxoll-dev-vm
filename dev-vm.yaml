@@ -242,11 +242,16 @@
       package: name=ruby-full state=present
       when:
         - ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-        - ruby
+        - ruby is true
+
+    - name: Check ruby version
+      command: ruby -v
+      when:
+        - ansible_distribution == "MacOSX"
 
     - name: Install tmuxinator
       gem: name=tmuxinator state=present
-      when: ruby
+      when: ruby is true
 
     - name: Download Powerline font for fancy terminal doodads
       block:
@@ -354,7 +359,9 @@
         url: "https://raw.github.com/aurora/rmate/master/rmate"
         dest: "{{ansible_env.HOME}}/bin/rsub"
         mode: u+x
-      when: ansible_distribution != "MacOSX"
+      when:
+        - ansible_distribution != "MacOSX"
+        - editor is defined and editor == 'sublime'
 
     - name: Add Sublime remote editing alias
       blockinfile:
@@ -362,7 +369,9 @@
         marker: "## {mark} Ansible aliases"
         content: |
           alias e="rsub"
-      when: ansible_distribution != "MacOSX"
+      when:
+        - ansible_distribution != "MacOSX"
+        - editor is defined and editor == 'sublime'
 
     - name: Install pry shortcuts
       copy: src=files/pryrc dest={{ansible_env.HOME}}/.pryrc mode=u=rwx
