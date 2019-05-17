@@ -237,12 +237,12 @@
     - name: Copy tmux local customizations
       copy: src=files/tmux.conf.local dest={{ansible_env.HOME}}/.tmux.conf.local
 
-    - name: Install apt packages
+    - name: Install apt packages for ruby
       become: yes
       package: name=ruby-full state=present
       when:
         - ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-        - ruby is true
+        - ruby
 
     - name: Check ruby version
       command: ruby -v
