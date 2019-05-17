@@ -251,7 +251,7 @@
 
     - name: Install tmuxinator
       gem: name=tmuxinator state=present
-      when: ruby is true
+      when: ruby
 
     - name: Download Powerline font for fancy terminal doodads
       block:
