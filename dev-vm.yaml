@@ -57,6 +57,10 @@
 # Some people still use Skype
         - skype
 
+      # App store apps
+      apple_appstore_package_list:
+        - "1295203466" # Microsoft Remote Desktop
+
       homebrew_cask_antivirus: avast-security
       homebrew_cask_password_vault: 1password
 
@@ -188,10 +192,10 @@
 
     - name: Install Apple App Store apps, if any
       command: mas install {{ item }}
-      with_items: "{{additional_cask_packages}}"
+      with_items: "{{apple_appstore_package_list}}"
       when:
         - ansible_distribution == "MacOSX"
-        - additional_cask_packages is defined
+        - apple_appstore_package_list is defined
 
     - name: Install homebrew docker
       homebrew: name=docker state=present
