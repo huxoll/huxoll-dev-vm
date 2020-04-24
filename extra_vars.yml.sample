@@ -45,5 +45,10 @@ get_fonts: true
 homebrew_cask_antivirus: avast-security
 homebrew_cask_password_vault: 1password
 
+# Apple ID, for installing from the app store. No default, of course.
+apple_id:
+# If password is not supplied, a dialog will pop.
+apple_id_password:
+
 # Misc settings
 shell: fish
