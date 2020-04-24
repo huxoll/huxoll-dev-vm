@@ -25,7 +25,7 @@ before_install:
   - sed -Ei.bk "s/^(docker.) true/\1 false/" extra_vars.yml
   - sed -Ei.bk "s/^(ruby.) true/\1 false/" extra_vars.yml
   - echo "[defaults]" > ansible.cfg
-  - echo "    callback_whitelist = profile_tasks" >> ansible.cfg
+  - echo "callback_whitelist = profile_tasks" >> ansible.cfg
   - ansible --version
 
 script:
