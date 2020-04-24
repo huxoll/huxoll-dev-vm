@@ -1,4 +1,5 @@
 # huxoll-dev-vm
+
 My personal DevVM configuration and tools.  This is a lot of tools for generic
 modern development, it's not tuned for a particular language or environment.
 The repo name is a bit of a minsomer; I use this natively on a local workstation
@@ -6,39 +7,44 @@ as well as on VMs.  You may find it useful as well, I have made some attempt to
 externalize the opinionated/personalized bits to settings that can be easily
 modified.
 
-# Build Status
+## Build Status
 
 [![Build Status](https://travis-ci.com/huxoll/huxoll-dev-vm.svg?branch=master)](https://travis-ci.com/huxoll/huxoll-dev-vm)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-# Prerequisites (OSX) #
+## Prerequisites (OSX)
 
 I rely on Homebrew, so it should be installed. See: https://brew.sh
 
 Homebrew will also install the XCode command line tools if not already installed.
 
-# Prerequisites (General) #
+## Prerequisites (General)
 
 Assumes Ansible is installed, on a Linux or OSX workstation.
 
 If ansible is not installed, try this:
 (Ubuntu 14.04)
+
 ``` bash
 sudo apt-add-repository ppa:ansible/ansible
 sudo apt-get update
 sudo apt-get install ansible
 ```
+
 (Ubuntu 16+)
+
 ``` bash
 sudo apt install -y python-pip git
 sudo pip install ansible
 ```
+
 (OSX)
+
 ```
 brew install ansible
 ```
 
-# Core workstation setup #
+## Core workstation setup
 
 * Obtain a shell on the target machine (this install is assumed to run locally)
 * Install git (if you haven't already) `sudo apt-get install git` or `brew install git`
@@ -52,7 +58,7 @@ brew install ansible
 
 There you have it, some basic development tools on a box or virtual machine.
 
-# Features #
+## Features
 
 * Docker support
 * Git config with some useful aliases
@@ -62,12 +68,12 @@ There you have it, some basic development tools on a box or virtual machine.
 * command prompt tagged with Git info
 * Interpreters for java, python, ruby, go (by default)
 
-# Target Infrastructure Platforms #
+## Target Infrastructure Platforms
 
 * MacOSX (only tested on 10.11-10.13)
 * Ubuntu Linux (14.04-16.10, VM or native)
 
-# Target Development Environments #
+## Target Development Environments
 
 * Generic (Atom, Sublime, Git, command prompt features)
 * Node.JS
