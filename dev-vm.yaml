@@ -242,11 +242,15 @@
         line: "[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion"
 
     - name: ensure config.fish exists
-      copy:
-        content: "# startup file for fish shell"
-        dest: "{{ansible_env.HOME}}/.config/fish/config.fish"
-        force: no
-        mode: 0600
+      block:
+        - name: Ensures fish config dir exists
+          file: path={{ansible_env.HOME}}/.config/fish state=directory
+        - name: copy the file
+          copy:
+            content: "# startup file for fish shell"
+            dest: "{{ansible_env.HOME}}/.config/fish/config.fish"
+            force: no
+            mode: 0600
       when: shell == "fish"
 
     - name: Make sure ~/bin is in PATH
@@ -289,8 +293,7 @@
 
     - name: Check ruby version
       command: ruby -v
-      when:
-        - ansible_distribution == "MacOSX"
+      when: ruby
 
     - name: Install tmuxinator
       gem: name=tmuxinator state=present

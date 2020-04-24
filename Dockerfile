@@ -1,4 +1,4 @@
-FROM williamyeh/ansible:ubuntu16.04
+FROM williamyeh/ansible:ubuntu18.04
 VOLUME /code
 ADD . /code
 WORKDIR /code
