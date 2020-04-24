@@ -27,7 +27,7 @@ additional_homebrew_packages: []
 additional_cask_packages: []
 
 # Editor/IDE of choice:
-editor: atom
+editor: visual-studio-code
 
 # Atom packages
 atom_packages:
@@ -40,3 +40,10 @@ docker: true
 ruby: true
 google_cloud: true
 get_fonts: true
+
+# Standard apps
+homebrew_cask_antivirus: avast-security
+homebrew_cask_password_vault: 1password
+
+# Misc settings
+shell: fish

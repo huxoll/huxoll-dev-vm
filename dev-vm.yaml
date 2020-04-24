@@ -19,6 +19,8 @@
         - tmux
         - gnu-tar
         - go
+        - gpg
+        - pinentry-mac
         - kubectl
         - bash-completion
         - wget
@@ -67,6 +69,7 @@
       projects_dir: '{{ansible_env.HOME}}/Projects'
       projects_dir_personal: '{{projects_dir}}/Personal'
       projects_dir_work: '{{projects_dir}}/Work'
+      shell: bash
 
     tasks:
     - name: Install atom apt repo
