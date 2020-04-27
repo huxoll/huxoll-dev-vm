@@ -69,7 +69,6 @@
       docker: true
       ruby: true
       google_cloud: true
-      workplace: 'Job'
       projects_dir: '{{ansible_env.HOME}}/Projects'
       projects_dir_personal: '{{projects_dir}}/Personal'
       projects_dir_work: '{{projects_dir}}/Work'
@@ -139,6 +138,11 @@
         - ansible_distribution == "MacOSX"
         - homebrew_installed is changed
         - homebrew_installed.rc != 0
+
+    - name: Brew doctor to check basics.
+      command: brew doctor
+      when:
+        - ansible_distribution == "MacOSX"
 
     - name: Install homebrew packages
       homebrew: name={{ homebrew_package_list }} state=present
@@ -474,3 +478,10 @@
       when:
         - atom_packages is defined
         - editor is defined and editor == 'atom'
+
+    - name: Install useful vscode packages
+      command: code --install-extension {{ item }}
+      with_items: "{{vscode_packages}}"
+      when:
+        - vscode_packages is defined
+        - editor is defined and editor == 'visual-studio-code'

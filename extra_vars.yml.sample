@@ -35,6 +35,9 @@ atom_packages:
   - git-plus
   - remote-atom
 
+# vscode_packages:
+  - Shan.code-settings-sync # this one syncs others...
+
 # Things you might want to turn off
 docker: true
 ruby: true
