@@ -199,15 +199,15 @@
       command: mas signin {{ apple_id }} {{ apple_id_password }}
       when:
         - ansible_distribution == "MacOSX"
-        - apple_id is defined and apple_id|length > 0
-        - apple_id_password is defined and apple_id_password|length > 0
+        - (apple_id is defined) and (apple_id|length > 0)
+        - (apple_id_password is defined) and (apple_id_password|length > 0)
 
     - name: Sign in to Apple App Store apps (no password)
       command: mas signin --dialog {{ apple_id }}
       when:
         - ansible_distribution == "MacOSX"
-        - apple_id is defined and apple_id|length > 0
-        - apple_id_password is undefined or apple_id_password|length == 0
+        - (apple_id is defined) and (apple_id|length > 0)
+        - (apple_id_password is undefined) or (apple_id_password|length == 0)
 
     - name: Install Apple App Store apps, if any
       command: mas install {{ item }}
@@ -215,7 +215,7 @@
       when:
         - ansible_distribution == "MacOSX"
         - apple_appstore_package_list is defined
-        - apple_id is defined and apple_id|length > 0
+        - (apple_id is defined) and (apple_id|length > 0)
 
     - name: Install homebrew docker
       homebrew: name=docker state=present
