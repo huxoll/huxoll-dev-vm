@@ -143,6 +143,7 @@
       command: brew doctor
       when:
         - ansible_distribution == "MacOSX"
+      ignore_errors: yes
 
     - name: Install homebrew packages
       homebrew: name={{ homebrew_package_list }} state=present
