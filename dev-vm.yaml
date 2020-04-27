@@ -46,10 +46,10 @@
         - meld
         - docker
 # Virtualization and remote access:
-        - vagrant
+        #- vagrant # maybe don't need vagrant anymore, doing more docker
         #- virtualbox VirtualBox is tricky on recent OSX
 # Every now and then, have to edit an image
-        - gimp
+        #- gimp # gimp is pretty tricky.
         - krita
 # Misc:
         - evernote
