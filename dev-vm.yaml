@@ -55,7 +55,7 @@
         - evernote
         - vlc
 # Some people still use Skype
-        - skype
+        #- skype # removing skype, homebrew install seems flaky.
 
       # App store apps
       apple_appstore_package_list:
