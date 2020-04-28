@@ -176,7 +176,10 @@
     - name: Install homebrew cask packages
       command: brew cask install {{ item }}
       loop: "{{ homebrew_cask_package_list }}"
-      when: ansible_distribution == "MacOSX"
+      when:
+        - ansible_distribution == "MacOSX"
+        # Skipping cask installs on CI...fails sometimes.
+        - "'CI' not in ansible_env or ansible_env.CI != 'true'"
 
     - name: List homebrew casks installed
       command: brew cask list
