@@ -127,6 +127,23 @@
         - ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
         - editor == 'atom'
 
+    - name: Install Visual Studio Code
+      # block:
+      #   - name: Pull down vscode package
+      #     get_url:
+      #       url: https://go.microsoft.com/fwlink/?LinkID=760868
+      #       dest: "{{ansible_env.HOME}}/vscode.deb"
+      #   - name: Pull down vscode package
+      #     get_url:
+      #       url: https://go.microsoft.com/fwlink/?LinkID=760868
+      #       dest: "{{ansible_env.HOME}}/vscode.deb"
+      become: yes
+      apt:
+        deb: https://go.microsoft.com/fwlink/?LinkID=760868
+      when:
+        - ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+        - editor == 'visual-studio-code'
+
     - name: Check if homebrew is installed
       shell: brew list
       register: homebrew_installed
@@ -151,14 +168,14 @@
 
     - name: Install homebrew additional packages, if any
       homebrew: name={{ item }} state=present
-      with_items: "{{additional_homebrew_packages}}"
+      loop: "{{ additional_homebrew_packages }}"
       when:
         - ansible_distribution == "MacOSX"
         - additional_homebrew_packages is defined
 
     - name: Install homebrew cask packages
       command: brew cask install {{ item }}
-      with_items: "{{homebrew_cask_package_list}}"
+      loop: "{{ homebrew_cask_package_list }}"
       when: ansible_distribution == "MacOSX"
 
     - name: List homebrew casks installed
@@ -168,7 +185,7 @@
 
     - name:  Install additional homebrew cask packages, if any
       command: brew cask install {{ item }}
-      with_items: "{{additional_cask_packages}}"
+      loop: "{{ additional_cask_packages }}"
       when:
         - ansible_distribution == "MacOSX"
         - additional_cask_packages is defined
@@ -197,17 +214,21 @@
 
     - name: Sign in to Apple App Store apps
       command: mas signin {{ apple_id }} {{ apple_id_password }}
+      register: mas_signin
       when:
         - ansible_distribution == "MacOSX"
-        - (apple_id is defined) and (apple_id|length > 0)
-        - (apple_id_password is defined) and (apple_id_password|length > 0)
+        - apple_id is defined
+        - apple_id|length > 0
+        - apple_id_password is defined
+        - apple_id_password|length > 0
 
     - name: Sign in to Apple App Store apps (no password)
       command: mas signin --dialog {{ apple_id }}
       when:
         - ansible_distribution == "MacOSX"
-        - (apple_id is defined) and (apple_id|length > 0)
-        - (apple_id_password is undefined) or (apple_id_password|length == 0)
+        - apple_id is defined
+        - apple_id|length > 0
+        - mas_signin is not changed
 
     - name: Install Apple App Store apps, if any
       command: mas install {{ item }}
@@ -215,7 +236,8 @@
       when:
         - ansible_distribution == "MacOSX"
         - apple_appstore_package_list is defined
-        - (apple_id is defined) and (apple_id|length > 0)
+        - apple_id is defined
+        - apple_id|length > 0
 
     - name: Install homebrew docker
       homebrew: name=docker state=present
@@ -486,3 +508,4 @@
       when:
         - vscode_packages is defined
         - editor is defined and editor == 'visual-studio-code'
+        - ansible_user_id != 'root'
