@@ -27,6 +27,9 @@ before_install:
   - echo "[defaults]" > ansible.cfg
   - echo "callback_whitelist = profile_tasks" >> ansible.cfg
   - ansible --version
+  # lots of cask installs seems to fail on CI.
+  - "echo 'homebrew_cask_package_list: \n' >> extra_vars.yml"
+  - "echo '  - visual-studio-code\n' >> extra_vars.yml"
 
 script:
   - ansible-playbook -i inventory --extra-vars @extra_vars.yml dev-vm.yaml
