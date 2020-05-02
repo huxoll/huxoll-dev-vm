@@ -44,6 +44,7 @@ docker: true
 ruby: true
 google_cloud: true
 get_fonts: true
+jdk8: true
 
 # Standard apps
 homebrew_cask_antivirus: avast-security
