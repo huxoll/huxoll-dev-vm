@@ -29,6 +29,7 @@
       homebrew_cask_package_list:
 # Interpreters:
         - java
+        - maven
 # Plain text editors:
         - sublime-text
         - atom
@@ -191,26 +192,6 @@
         - ansible_distribution == "MacOSX"
         - additional_cask_packages is defined
 
-    - name: Add good old JDK8, since some projects use it
-      block:
-        - name: Add tap for AdoptOpenJDK
-          command: brew tap adoptopenjdk/openjdk
-        - name: Install Java environment chooser
-          command: brew install jenv
-        - name: Install JDK8
-          command: brew cask install adoptopenjdk/openjdk/adoptopenjdk8
-        - name: Add jenv to path
-          lineinfile: dest={{ansible_env.HOME}}/.config/fish/config.fish regexp='^set -x PATH $HOME/.jenv/bin $PATH' line='set -x PATH $HOME/.jenv/bin $PATH'
-          when: shell == "fish"
-        - name: Add jenv to path
-          lineinfile: dest={{ansible_env.HOME}}/.config/fish/config.fish regexp='^status --is-interactive; and source (jenv init -|psub)' line='status --is-interactive; and source (jenv init -|psub)'
-          when: shell == "fish"
-        - name: Add JDK8 as possible environment
-          command: jenv add /Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home
-      when:
-        - ansible_distribution == "MacOSX"
-        - jdk8 is defined and jdk8
-
     - name: Add antivirus as homebrew cask package
       command: brew cask install {{ homebrew_cask_antivirus }}
       when:
@@ -327,6 +308,29 @@
     - name: Make sure ~/bin is in PATH
       lineinfile: dest={{ansible_env.HOME}}/.config/fish/config.fish regexp="^set -x PATH .*{{personal_bin}}" line='set -x PATH {{personal_bin}} $PATH'
       when: shell == "fish"
+
+    - name: Add good old JDK8, since some projects use it
+      block:
+        - name: Add tap for AdoptOpenJDK
+          command: brew tap adoptopenjdk/openjdk
+        - name: Install Java environment chooser
+          command: brew install jenv
+        - name: Install JDK8
+          command: brew cask install adoptopenjdk/openjdk/adoptopenjdk8
+        - name: Add jenv to path
+          lineinfile: dest={{ansible_env.HOME}}/.config/fish/config.fish regexp='^set -x PATH $HOME/.jenv/bin $PATH' line='set -x PATH $HOME/.jenv/bin $PATH'
+          when: shell == "fish"
+        - name: Add jenv to path
+          lineinfile: dest={{ansible_env.HOME}}/.config/fish/config.fish regexp='^status --is-interactive; and source (jenv init -|psub)' line='status --is-interactive; and source (jenv init -|psub)'
+          when: shell == "fish"
+        - name: Add JDK8 as possible environment
+          command: jenv add /Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home
+        - name: Set JAVA_HOME
+          lineinfile: dest={{ansible_env.HOME}}/.config/fish/config.fish regexp='^set -x JAVA_HOME /Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home' line='set -x JAVA_HOME /Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home'
+          when: shell == "fish"
+      when:
+        - ansible_distribution == "MacOSX"
+        - jdk8 is defined and jdk8
 
     - name: Copy inputrc file
       copy: src=files/inputrc dest={{ansible_env.HOME}}/.inputrc
