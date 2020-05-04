@@ -339,6 +339,7 @@
         - name: Install Java environment chooser
           command: git clone https://github.com/gcuisinier/jenv.git ~/.jenv
         - name: Install JDK8
+          become: yes
           apt:
             pkg:
               - openjdk-8-jdk
