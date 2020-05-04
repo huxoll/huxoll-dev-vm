@@ -320,16 +320,44 @@
         - name: Add jenv to path
           lineinfile: dest={{ansible_env.HOME}}/.config/fish/config.fish regexp='^set -x PATH $HOME/.jenv/bin $PATH' line='set -x PATH $HOME/.jenv/bin $PATH'
           when: shell == "fish"
-        - name: Add jenv to path
+        - name: Load jenv on login
           lineinfile: dest={{ansible_env.HOME}}/.config/fish/config.fish regexp='^status --is-interactive; and source (jenv init -|psub)' line='status --is-interactive; and source (jenv init -|psub)'
           when: shell == "fish"
         - name: Add JDK8 as possible environment
-          command: jenv add /Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home
+          shell: export PATH=$PATH:{{ansible_env.HOME}}/.jenv/bin && eval "$(jenv init -)" && jenv add /usr/lib/jvm/java-8-openjdk-amd64
+          args:
+            executable: /bin/bash
         - name: Set JAVA_HOME
           lineinfile: dest={{ansible_env.HOME}}/.config/fish/config.fish regexp='^set -x JAVA_HOME /Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home' line='set -x JAVA_HOME /Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home'
           when: shell == "fish"
       when:
         - ansible_distribution == "MacOSX"
+        - jdk8 is defined and jdk8
+
+    - name: Add good old JDK8, since some projects use it (linux)
+      block:
+        - name: Install Java environment chooser
+          command: git clone https://github.com/gcuisinier/jenv.git ~/.jenv
+        - name: Install JDK8
+          apt:
+            pkg:
+              - openjdk-8-jdk
+              - openjdk-8-jre
+        - name: Add jenv to path
+          lineinfile: dest={{ansible_env.HOME}}/.config/fish/config.fish regexp='^set -x PATH $HOME/.jenv/bin $PATH' line='set -x PATH $HOME/.jenv/bin $PATH'
+          when: shell == "fish"
+        - name: Load jenv on login
+          lineinfile: dest={{ansible_env.HOME}}/.config/fish/config.fish regexp='^status --is-interactive; and source (jenv init -|psub)' line='status --is-interactive; and source (jenv init -|psub)'
+          when: shell == "fish"
+        - name: Add JDK8 as possible environment
+          shell: export PATH=$PATH:{{ansible_env.HOME}}/.jenv/bin && eval "$(jenv init -)" && jenv add /usr/lib/jvm/java-8-openjdk-amd64
+          args:
+            executable: /bin/bash
+        - name: Set JAVA_HOME
+          lineinfile: dest={{ansible_env.HOME}}/.config/fish/config.fish regexp='^set -x JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64' line='set -x JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64'
+          when: shell == "fish"
+      when:
+        - ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
         - jdk8 is defined and jdk8
 
     - name: Copy inputrc file
