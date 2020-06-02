@@ -27,6 +27,7 @@
         - watch
         - mas
         - dos2unix
+        - thefuck
       homebrew_cask_package_list:
 # Interpreters:
         - java
