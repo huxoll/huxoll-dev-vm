@@ -560,7 +560,10 @@
             dest: "{{ansible_env.HOME}}/.bash_profile"
             regexp: "^source '{{ansible_env.HOME}}/google-cloud-sdk/completion.bash.inc'"
             line: "source '{{ansible_env.HOME}}/google-cloud-sdk/completion.bash.inc'"
-      when: google_cloud
+      when:
+        - google_cloud
+        - not ansible_check_mode
+
 
     - name: Get google repo
       get_url:
