@@ -291,13 +291,29 @@
         regexp: "^.*. /usr/local/etc/bash_completion"
         line: "[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion"
 
+    - name: Install latest bash shell
+      block:
+        - name: Install bash from homebrew
+          homebrew: name=bash state=present
+        - name: Add new bash to list of shells
+          become: yes
+          lineinfile:
+            path: /etc/shells
+            regexp: '^/usr/local/bin/bash'
+            line: /usr/local/bin/bash
+        - name: Use new bash as shell
+          command: chsh -s /usr/local/bin/bash
+      when:
+        - shell == "bash"
+        - ansible_distribution == "MacOSX"
+
     - name: Install fish shell
-      homebrew: name=docker state=present
+      homebrew: name=fish state=present
       when:
         - shell == "fish"
         - ansible_distribution == "MacOSX"
 
-    - name: Install fish shell
+    - name: Install fish shell on Linux
       block:
         - name: Install fish apt repo
           become: yes
@@ -473,7 +489,6 @@
         - ansible_distribution == "MacOSX"
         - shell == "bash"
 
-
     - name: Add gitprompt to bashrc
       blockinfile:
         dest: "{{ansible_env.HOME}}/.bashrc"
@@ -488,7 +503,19 @@
         - ansible_distribution == "MacOSX"
         - shell == "bash"
 
-    - name: Add useful aliases
+    - name: Install Oh My Bash
+      block:
+        - name: Install Oh My Bash
+          command: bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
+        - name: Choose Oh My Bash theme
+          lineinfile:
+            dest: "{{ansible_env.HOME}}/.bashrc"
+            regexp='^OSH_THEME='
+            line='OSH_THEME="powerline"'
+      when:
+        - shell == "bash"
+
+    - name: Add useful bash aliases
       blockinfile:
         dest: "{{ansible_env.HOME}}/.bash_profile"
         marker: "## {mark} Ansible aliases"
@@ -500,7 +527,25 @@
           alias gup='git up'
       when: shell == "bash"
 
-    - name: Add useful aliases
+    - name: Add useful bash aliases for editor
+      lineinfile:
+        path: "{{ansible_env.HOME}}/.bash_profile"
+        regexp: "^alias e="
+        line: alias e='code --goto '
+      when:
+        - shell == "bash"
+        - editor is defined and editor == 'visual-studio-code'
+
+    - name: Add useful bash variables for editor
+      lineinfile:
+        path: "{{ansible_env.HOME}}/.bashrc"
+        regexp: "^export EDITOR="
+        line: export EDITOR=code
+      when:
+        - shell == "bash"
+        - editor is defined and editor == 'visual-studio-code'
+
+    - name: Add useful fish aliases
       blockinfile:
         dest: "{{ansible_env.HOME}}/.config/fish/config.fish"
         marker: "## {mark} Ansible aliases"
@@ -513,7 +558,7 @@
           alias k='kubectl'
       when: shell == "fish"
 
-    - name: Add useful aliases (Linux)
+    - name: Add useful bash aliases (Linux)
       blockinfile:
         dest: "{{ansible_env.HOME}}/.bash_profile"
         marker: "## {mark} Ansible aliases for linux"
@@ -523,7 +568,7 @@
         - ansible_distribution != "MacOSX"
         - shell == "bash"
 
-    - name: Add useful aliases (Linux)
+    - name: Add useful fish aliases (Linux)
       blockinfile:
         dest: "{{ansible_env.HOME}}/.config/fish/config.fish"
         marker: "## {mark} Ansible aliases for linux"
