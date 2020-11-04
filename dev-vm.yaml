@@ -510,8 +510,8 @@
         - name: Choose Oh My Bash theme
           lineinfile:
             dest: "{{ansible_env.HOME}}/.bashrc"
-            regexp='^OSH_THEME='
-            line='OSH_THEME="powerline"'
+            regexp: '^OSH_THEME='
+            line: 'OSH_THEME="powerline"'
       when:
         - shell == "bash"
 
