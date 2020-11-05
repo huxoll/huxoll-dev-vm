@@ -165,15 +165,15 @@
         - ansible_distribution == "MacOSX"
       ignore_errors: yes
 
-    # - name: Install homebrew packages
-    #   homebrew: name={{ homebrew_package_list }} state=present
-    #   when: ansible_distribution == "MacOSX"
     - name: Install homebrew packages
-      homebrew: name={{ item }} state=present
-      loop: "{{ homebrew_package_list }}"
-      when:
-        - ansible_distribution == "MacOSX"
-        - homebrew_package_list is defined
+      homebrew: name={{ homebrew_package_list }} state=present
+      when: ansible_distribution == "MacOSX"
+    # - name: Install homebrew packages
+    #   homebrew: name={{ item }} state=present
+    #   loop: "{{ homebrew_package_list }}"
+    #   when:
+    #     - ansible_distribution == "MacOSX"
+    #     - homebrew_package_list is defined
 
     - name: Install homebrew additional packages, if any
       homebrew: name={{ item }} state=present

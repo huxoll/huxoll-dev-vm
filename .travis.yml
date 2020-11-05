@@ -7,14 +7,14 @@ os:
 addons:
   apt:
     sources:
-      - sourceline: 'ppa:ansible/ansible'
+      - sourceline: "ppa:ansible/ansible"
     packages:
-    - python
-    - python-pip
-    - ansible
+      - python
+      - python-pip
+      - ansible
   homebrew:
     packages:
-    - ansible
+      - ansible
 
 env:
   - PATH=$PATH:$HOME/.gem/ruby/2.4.0/bin
@@ -30,6 +30,9 @@ before_install:
   # lots of cask installs seems to fail on CI.
   - "echo 'homebrew_cask_package_list: \n' >> extra_vars.yml"
   - "echo '  - visual-studio-code\n' >> extra_vars.yml"
+  - "echo 'homebrew_package_list: \n' >> extra_vars.yml"
+  - "echo '  - wget\n' >> extra_vars.yml"
+  - "echo '  - tmux\n' >> extra_vars.yml"
 
 script:
-  - travis_wait 30 ansible-playbook -i inventory --extra-vars @extra_vars.yml dev-vm.yaml
+  - travis_wait 30 ansible-playbook -i inventory --extra-vars @extra_vars.yml -vvv dev-vm.yaml
