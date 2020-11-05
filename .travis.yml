@@ -32,4 +32,4 @@ before_install:
   - "echo '  - visual-studio-code\n' >> extra_vars.yml"
 
 script:
-  - ansible-playbook -i inventory --extra-vars @extra_vars.yml dev-vm.yaml
+  - travis_wait 30 ansible-playbook -i inventory --extra-vars @extra_vars.yml dev-vm.yaml
