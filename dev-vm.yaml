@@ -175,12 +175,12 @@
     #     - ansible_distribution == "MacOSX"
     #     - homebrew_package_list is defined
 
-    - name: Install homebrew additional packages, if any
-      homebrew: name={{ additional_homebrew_packages }} state=present
-    #  loop: "{{ additional_homebrew_packages }}"
-      when:
-        - ansible_distribution == "MacOSX"
-        - additional_homebrew_packages is defined
+    # - name: Install homebrew additional packages, if any
+    #   homebrew: name={{ additional_homebrew_packages }} state=present
+    # #  loop: "{{ additional_homebrew_packages }}"
+    #   when:
+    #     - ansible_distribution == "MacOSX"
+    #     - additional_homebrew_packages is defined
 
     - name: Install homebrew cask packages
       command: brew cask install {{ item }}
