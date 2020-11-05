@@ -307,7 +307,7 @@
         - shell == "bash"
         - ansible_distribution == "MacOSX"
 
-    - name: Install fish shell
+    - name: Install fish shell on MacOS
       homebrew: name=fish state=present
       when:
         - shell == "fish"
@@ -318,8 +318,7 @@
         - name: Install fish apt repo
           become: yes
           apt_repository:
-            repo: deb http://ppa.launchpad.net/fish-shell/release-3/ubuntu {{ ansible_distribution_release }} main
-          ignore_errors: yes
+            repo: ppa:fish-shell/release-3
         - name: Install from apt repo
           become: yes
           apt: pkg=fish state=present
