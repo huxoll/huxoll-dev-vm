@@ -38,8 +38,8 @@ before_install:
 
 install:
   # try to upgrade ansible
-  - if [[ "OS" = "MacOS" ]]; then brew upgrade ansible; fi
+  - if [[ "$TRAVIS_OS_NAME" = "osx" ]]; then brew upgrade ansible; fi
 
 script:
-  - if [[ "OS" != "MacOS" ]]; then ansible-playbook -i inventory --extra-vars @extra_vars.yml -vvv dev-vm.yaml; fi
-  - if [[ "OS" = "MacOS" ]]; travis_wait 30 ansible-playbook -i inventory --extra-vars @extra_vars.yml -vvv dev-vm.yaml; fi
+  - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then ansible-playbook -i inventory --extra-vars @extra_vars.yml -vvv dev-vm.yaml; fi
+  - if [[ "$TRAVIS_OS_NAME" = "osx" ]]; travis_wait 30 ansible-playbook -i inventory --extra-vars @extra_vars.yml -vvv dev-vm.yaml; fi
