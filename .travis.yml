@@ -42,4 +42,4 @@ install:
 
 script:
   - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then ansible-playbook -i inventory --extra-vars @extra_vars.yml -vvv dev-vm.yaml; fi
-  - if [[ "$TRAVIS_OS_NAME" = "osx" ]]; travis_wait 30 ansible-playbook -i inventory --extra-vars @extra_vars.yml -vvv dev-vm.yaml; fi
+  - if [[ "$TRAVIS_OS_NAME" = "osx" ]]; then travis_wait 30 ansible-playbook -i inventory --extra-vars @extra_vars.yml -vvv dev-vm.yaml; fi
