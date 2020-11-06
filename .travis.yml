@@ -34,6 +34,7 @@ before_install:
   - "echo 'homebrew_package_list: \n' >> extra_vars.yml"
   - "echo '  - wget\n' >> extra_vars.yml"
   - "echo '  - tmux\n' >> extra_vars.yml"
+  - env
 
 install:
   # try to upgrade ansible
