@@ -3,6 +3,7 @@ language: generic
 os:
   - linux
   - osx
+dist: bionic
 
 addons:
   apt:
@@ -34,5 +35,10 @@ before_install:
   - "echo '  - wget\n' >> extra_vars.yml"
   - "echo '  - tmux\n' >> extra_vars.yml"
 
+install:
+  # try to upgrade ansible
+  - if [[ "OS" = "MacOS" ]]; then brew upgrade ansible; fi
+
 script:
-  - travis_wait 30 ansible-playbook -i inventory --extra-vars @extra_vars.yml -vvv dev-vm.yaml
+  - if [[ "OS" != "MacOS" ]]; then ansible-playbook -i inventory --extra-vars @extra_vars.yml -vvv dev-vm.yaml; fi
+  - if [[ "OS" = "MacOS" ]]; travis_wait 30 ansible-playbook -i inventory --extra-vars @extra_vars.yml -vvv dev-vm.yaml; fi
