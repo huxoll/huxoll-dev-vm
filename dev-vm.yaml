@@ -458,12 +458,12 @@
       block:
         - name: Add homebrew cask for fonts
           command: brew tap homebrew/cask-fonts
-        - name: Install the hack font
+        - name: Install the hack nerd font
           command: brew cask install font-hack-nerd-font
-        - name: Install the hack font
-          command: brew cask install font-lekton-nerd-font
-        - name: Install the hack font
-          command: brew cask install font-ubuntumono-nerd-font
+        # - name: Install the hack font
+        #   command: brew cask install font-lekton-nerd-font
+        # - name: Install the hack font
+        #   command: brew cask install font-ubuntumono-nerd-font
       when:
         - ansible_distribution == "MacOSX"
         - get_fonts
