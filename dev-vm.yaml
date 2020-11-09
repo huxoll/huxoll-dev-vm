@@ -131,15 +131,6 @@
         - editor == 'atom'
 
     - name: Install Visual Studio Code
-      # block:
-      #   - name: Pull down vscode package
-      #     get_url:
-      #       url: https://go.microsoft.com/fwlink/?LinkID=760868
-      #       dest: "{{ansible_env.HOME}}/vscode.deb"
-      #   - name: Pull down vscode package
-      #     get_url:
-      #       url: https://go.microsoft.com/fwlink/?LinkID=760868
-      #       dest: "{{ansible_env.HOME}}/vscode.deb"
       become: yes
       apt:
         deb: https://go.microsoft.com/fwlink/?LinkID=760868

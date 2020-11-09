@@ -29,12 +29,12 @@ before_install:
   - echo "callback_whitelist = profile_tasks" >> ansible.cfg
   - ansible --version
   # lots of cask installs seems to fail on CI.
-  - "echo 'homebrew_cask_package_list: \n' >> extra_vars.yml"
-  - "echo '  - visual-studio-code\n' >> extra_vars.yml"
-  - "echo 'homebrew_package_list: \n' >> extra_vars.yml"
-  - "echo '  - wget\n' >> extra_vars.yml"
-  - "echo '  - tmux\n' >> extra_vars.yml"
-  - env
+  # - "echo 'homebrew_cask_package_list: \n' >> extra_vars.yml"
+  # - "echo '  - visual-studio-code\n' >> extra_vars.yml"
+  # - "echo 'homebrew_package_list: \n' >> extra_vars.yml"
+  # - "echo '  - wget\n' >> extra_vars.yml"
+  # - "echo '  - tmux\n' >> extra_vars.yml"
+  # - env
 
 install:
   # try to upgrade ansible
