@@ -156,10 +156,6 @@
         - ansible_distribution == "MacOSX"
       ignore_errors: yes
 
-    - name: Install gnu-tar via homebrew, needed for ansible
-      homebrew: name=gnu-tar state=present
-      when: ansible_distribution == "MacOSX"
-
     - name: Install homebrew packages
       homebrew: name={{ homebrew_package_list }} state=present
       when: ansible_distribution == "MacOSX"
