@@ -340,6 +340,18 @@
       when:
         - shell == "fish"
 
+    - name: Add oh-my-zsh
+      block:
+        - name: Get installer
+          get_url:
+            url: "https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
+            dest: "{{ansible_env.HOME}}/ohmyzsh_install"
+            mode: u+x
+        - name: Run oh-my-zsh installer
+          command: sh {{ansible_env.HOME}}/ohmyzsh_install -y --noninteractive
+      when:
+        - shell == "zsh"
+
     - name: Make sure ~/bin is in PATH
       lineinfile: dest={{ansible_env.HOME}}/.bashrc regexp="^export PATH=.*{{personal_bin}}" line='export PATH={{personal_bin}}:$PATH'
       when: shell == "bash"
@@ -566,6 +578,10 @@
       when:
         - ansible_distribution != "MacOSX"
         - shell == "fish"
+
+    - name: Install zshrc
+      copy: src=files/zshrc dest={{ansible_env.HOME}}/.zshrc mode=u=rw
+      when: shell == "zsh"
 
     - name: Add z utility
       block:
