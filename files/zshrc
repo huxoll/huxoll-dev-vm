@@ -1,5 +1,5 @@
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/gardnerj/.oh-my-zsh"
@@ -70,7 +70,8 @@ HIST_STAMPS="yyyy-mm-dd"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git osx battery shrink-path)
+# Maybe: per-directory-history
+plugins=(git battery brew osx shrink-path)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -90,6 +91,11 @@ source $ZSH/oh-my-zsh.sh
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
+
+export DOCKER_ID_USER="huxoll"
+export PATH="$HOME/.yarn/bin:$PATH"
+export PATH=$HOME/bin:$PATH
+
 # Go Path
 export GOPATH=$HOME/go
 export PATH=$PATH:$HOME/go/bin
@@ -102,9 +108,6 @@ ANT_OPTS=-Xmx256m
 # Add jenv for selection of homebrew java version.
 export PATH="$HOME/.jenv/bin:$PATH"
 if which jenv > /dev/null; then eval "$(jenv init -)"; fi
-
-# Add personal bin dir
-export PATH="$HOME/bin:$PATH"
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/Users/gardnerj/.sdkman"
@@ -163,6 +166,7 @@ alias e='code --goto'
 alias more='less'
 alias mroe='less'
 alias ls='ls -F'
+alias opne='open'
 
 # Tools and utilities
 alias t='history'
@@ -183,13 +187,18 @@ function git_current_branch() {
   git symbolic-ref HEAD 2> /dev/null | sed -e 's/refs\/heads\///'
 }
 
-# Personal Aliases
-alias gog="cd ~/Google\ Drive"
-alias gop="cd ~/Projects/Personal"
-
 # Git
 alias gpthis='git push origin HEAD:$(git_current_branch)'
 alias grb='git rebase -p'
 alias gm='git merge --no-ff'
 alias glog='git log --oneline --decorate'
 alias gup='git up'
+
+# Personal Aliases
+alias gog="cd ~/Google\ Drive"
+alias gop="cd ~/Projects/Personal"
+
+# Useful nav
+alias gomaps="~/Google\ Drive/Games/Maps"
+alias godnd="~/Google\ Drive/Games/DND"
+alias gotokens="~/Google\ Drive/Games/Tokens"
