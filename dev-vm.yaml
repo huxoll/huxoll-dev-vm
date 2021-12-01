@@ -1,83 +1,84 @@
 ---
-  - hosts: localhost
-    connection: local
-    become: no
+- hosts: localhost
+  connection: local
+  become: no
 
-    vars:
-      apt_package_list:
-        - wget
-        - curl
-        - gzip
-        - pbzip2
-        - unzip
-        - vim
-        - git
-        - zip
-        - sudo
-      homebrew_package_list:
-        - node
-        - tmux
-        - gnu-tar
-        - go
-        - gpg
-        - pinentry-mac
-        - kubectl
-        - bash-completion
-        - wget
-        - watch
-        - mas
-        - dos2unix
-        - thefuck
-      homebrew_cask_package_list:
-# Interpreters:
-        - java
-        - maven
-# Plain text editors:
-        - sublime-text
-        - atom
-# Browsers:
-        # Already part of base image
-        # - google-chrome
-        - homebrew/cask-versions/firefox-developer-edition
-        - tor-browser
-# IDE:
-        - visual-studio-code
-# General Dev tools:
-        - iterm2
-        # Already part of base image
-        # - slack
-        - meld
-        - docker
-# Virtualization and remote access:
-        #- vagrant # maybe don't need vagrant anymore, doing more docker
-        #- virtualbox VirtualBox is tricky on recent OSX
-# Every now and then, have to edit an image
-        #- gimp # gimp is pretty tricky.
-        - krita
-# Misc:
-        - evernote
-        - vlc
-# Some people still use Skype
-        #- skype # removing skype, homebrew install seems flaky.
+  vars:
+    apt_package_list:
+      - wget
+      - curl
+      - gzip
+      - pbzip2
+      - unzip
+      - vim
+      - git
+      - zip
+      - sudo
+    homebrew_package_list:
+      - fd
+      - node
+      - tmux
+      - gnu-tar
+      - go
+      - gpg
+      - pinentry-mac
+      - kubectl
+      - bash-completion
+      - wget
+      - watch
+      - mas
+      - dos2unix
+      - thefuck
+    homebrew_cask_package_list:
+      # Interpreters:
+      - java
+      - maven
+      # Plain text editors:
+      - sublime-text
+      - atom
+      # Browsers:
+      # Already part of base image
+      # - google-chrome
+      - homebrew/cask-versions/firefox-developer-edition
+      - tor-browser
+      # IDE:
+      - visual-studio-code
+      # General Dev tools:
+      - iterm2
+      # Already part of base image
+      # - slack
+      - meld
+      - docker
+      # Virtualization and remote access:
+      #- vagrant # maybe don't need vagrant anymore, doing more docker
+      #- virtualbox VirtualBox is tricky on recent OSX
+      # Every now and then, have to edit an image
+      #- gimp # gimp is pretty tricky.
+      - krita
+      # Misc:
+      - evernote
+      - vlc
+    # Some people still use Skype
+    #- skype # removing skype, homebrew install seems flaky.
 
-      # App store apps
-      apple_appstore_package_list:
-        - "1295203466" # Microsoft Remote Desktop
+    # App store apps
+    apple_appstore_package_list:
+      - "1295203466" # Microsoft Remote Desktop
 
-      homebrew_cask_antivirus: avast-security
-      homebrew_cask_password_vault: 1password
+    homebrew_cask_antivirus: avast-security
+    homebrew_cask_password_vault: 1password
 
-      personal_bin: '{{ansible_env.HOME}}/bin'
-      get_fonts: true
-      docker: true
-      ruby: true
-      google_cloud: true
-      projects_dir: '{{ansible_env.HOME}}/Projects'
-      projects_dir_personal: '{{projects_dir}}/Personal'
-      projects_dir_work: '{{projects_dir}}/Work'
-      shell: bash
+    personal_bin: "{{ansible_env.HOME}}/bin"
+    get_fonts: true
+    docker: true
+    ruby: true
+    google_cloud: true
+    projects_dir: "{{ansible_env.HOME}}/Projects"
+    projects_dir_personal: "{{projects_dir}}/Personal"
+    projects_dir_work: "{{projects_dir}}/Work"
+    shell: bash
 
-    tasks:
+  tasks:
     - name: Install atom apt repo
       become: yes
       apt_repository:
@@ -177,7 +178,7 @@
       register: homebrew_casks
       when: ansible_distribution == "MacOSX"
 
-    - name:  Install additional homebrew cask packages, if any
+    - name: Install additional homebrew cask packages, if any
       command: brew cask install {{ item }}
       loop: "{{ additional_cask_packages }}"
       when:
@@ -252,7 +253,7 @@
     - name: Copy xgrep
       copy: src={{ item }} dest={{ansible_env.HOME}}/bin/ mode=u=rwx
       with_fileglob:
-      - files/*grep
+        - files/*grep
 
     - name: Copy gup
       copy: src=files/gup dest={{ansible_env.HOME}}/bin/ mode=u=rwx
@@ -289,7 +290,7 @@
           become: yes
           lineinfile:
             path: /etc/shells
-            regexp: '^/usr/local/bin/bash'
+            regexp: "^/usr/local/bin/bash"
             line: /usr/local/bin/bash
         - name: Use new bash as shell
           command: chsh -s /usr/local/bin/bash
@@ -424,12 +425,12 @@
         create: yes
         regexp: "^.*ALL=(ALL:ALL) NOPASSWD: ALL"
         line: "{{ ansible_user_id }}        ALL=(ALL:ALL) NOPASSWD: ALL"
-        validate: 'visudo -cf %s'
+        validate: "visudo -cf %s"
       become: yes
 
     - name: tmux prettier configuration
       git:
-        repo: 'https://github.com/gpakosz/.tmux.git'
+        repo: "https://github.com/gpakosz/.tmux.git"
         dest: "{{ansible_env.HOME}}/.tmux"
 
     - name: Copy tmux local customizations
@@ -466,7 +467,7 @@
 
     - name: Decorate prompt with git status (Linux)
       git:
-        repo: 'https://github.com/magicmonty/bash-git-prompt.git'
+        repo: "https://github.com/magicmonty/bash-git-prompt.git"
         dest: "{{ansible_env.HOME}}/.bash-git-prompt"
         depth: 1
       when: ansible_distribution != "MacOSX"
@@ -511,7 +512,7 @@
         - name: Choose Oh My Bash theme
           lineinfile:
             dest: "{{ansible_env.HOME}}/.bashrc"
-            regexp: '^OSH_THEME='
+            regexp: "^OSH_THEME="
             line: 'OSH_THEME="powerline"'
       when:
         - shell == "bash"
@@ -613,7 +614,6 @@
       when:
         - google_cloud
         - not ansible_check_mode
-
 
     - name: Get google repo
       get_url:
