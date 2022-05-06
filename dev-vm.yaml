@@ -168,7 +168,7 @@
         - additional_homebrew_packages is defined
 
     - name: Install homebrew cask packages
-      command: brew cask install {{ item }}
+      command: brew install --cask {{ item }}
       loop: "{{ homebrew_cask_package_list }}"
       when:
         - ansible_distribution == "MacOSX"
