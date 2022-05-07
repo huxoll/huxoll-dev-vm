@@ -31,11 +31,11 @@
       - thefuck
     homebrew_cask_package_list:
       # Interpreters:
-      - java
-      - maven
+      # Not using - java
+      # Not using - maven
       # Plain text editors:
-      - sublime-text
-      - atom
+      # Not using - sublime-text
+      # Not using - atom
       # Browsers:
       # Already part of base image
       # - google-chrome
