@@ -10,9 +10,27 @@
   whitespace = fix
 
 [alias]
-    st = status
-    ci = commit
-    br = branch
-    co = checkout
-    df = diff
-    lg = log
+	up = !git fetch && git rebase --autostash FETCH_HEAD
+	st = status
+	ci = commit
+	br = branch
+	co = checkout
+	df = diff
+	lg = log
+	squash = "!f(){ git reset --soft HEAD~${1} && git commit --edit -m\"$(git log --format=%B --reverse HEAD..HEAD@{1})\"; };f"
+	spush = push --recurse-submodules=on-demand
+	supdate = submodule update --remote --merge
+	sdiff = !git diff && git submodule foreach 'git diff'
+
+[diff]
+	submodule = log
+[core]
+	autocrlf = input
+
+[pager]
+	branch = false
+
+[pull]
+	rebase = true
+[init]
+	defaultBranch = main
