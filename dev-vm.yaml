@@ -3,6 +3,9 @@
   connection: local
   become: no
 
+  environment:
+    PATH: /usr/bin:/bin
+
   vars:
     apt_package_list:
       - wget
@@ -597,7 +600,7 @@
     - name: Get google cloud SDK
       block:
         - get_url:
-            url: https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-197.0.0-darwin-x86_64.tar.gz
+            url: https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-435.0.0-darwin-x86_64.tar.gz
             dest: "{{ansible_env.HOME}}/google-cloud-sdk.tar.gz"
         - unarchive:
             src: "{{ansible_env.HOME}}/google-cloud-sdk.tar.gz"
@@ -614,6 +617,29 @@
       when:
         - google_cloud
         - not ansible_check_mode
+        - ansible_distribution == "MacOSX"
+
+    - name: Get google cloud SDK
+      block:
+        - get_url:
+            url: https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-435.0.1-linux-x86_64.tar.gz
+            dest: "{{ansible_env.HOME}}/google-cloud-sdk.tar.gz"
+        - unarchive:
+            src: "{{ansible_env.HOME}}/google-cloud-sdk.tar.gz"
+            dest: "{{ansible_env.HOME}}"
+        - command: "{{ansible_env.HOME}}/google-cloud-sdk/install.sh"
+        - lineinfile:
+            dest: "{{ansible_env.HOME}}/.bash_profile"
+            regexp: "^source '{{ansible_env.HOME}}/google-cloud-sdk/path.bash.inc'"
+            line: "source '{{ansible_env.HOME}}/google-cloud-sdk/path.bash.inc'"
+        - lineinfile:
+            dest: "{{ansible_env.HOME}}/.bash_profile"
+            regexp: "^source '{{ansible_env.HOME}}/google-cloud-sdk/completion.bash.inc'"
+            line: "source '{{ansible_env.HOME}}/google-cloud-sdk/completion.bash.inc'"
+      when:
+        - google_cloud
+        - not ansible_check_mode
+        - ansible_distribution != "MacOSX"
 
     - name: Get google repo
       get_url:
