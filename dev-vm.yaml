@@ -510,8 +510,12 @@
 
     - name: Install Oh My Bash
       block:
+        - get_url:
+            url: "https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh"
+            dest: "/tmp/install.sh"
+            mode: u+x
         - name: Install Oh My Bash
-          command: bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
+          command: /bin/bash "/tmp/install.sh"
         - name: Choose Oh My Bash theme
           lineinfile:
             dest: "{{ansible_env.HOME}}/.bashrc"
