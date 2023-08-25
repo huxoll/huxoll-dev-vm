@@ -3,9 +3,6 @@
   connection: local
   become: no
 
-  environment:
-    PATH: /usr/bin:/bin
-
   vars:
     apt_package_list:
       - wget
@@ -18,20 +15,25 @@
       - zip
       - sudo
     homebrew_package_list:
+      - awscli
+      - bash-completion
+      - direnv
+      - dos2unix
       - fd
-      - node
-      - tmux
       - gnu-tar
       - go
       - gpg
-      - pinentry-mac
       - kubectl
-      - bash-completion
+      - mas
+      - node
+      - obsidian
+      - pinentry-mac
+      - pyenv
+      - thefuck
+      - tmux
       - wget
       - watch
-      - mas
-      - dos2unix
-      - thefuck
+      - webp
     homebrew_cask_package_list:
       # Interpreters:
       # Not using - java
@@ -177,19 +179,19 @@
         - ansible_distribution == "MacOSX"
 
     - name: List homebrew casks installed
-      command: brew cask list
+      command: brew list --cask
       register: homebrew_casks
       when: ansible_distribution == "MacOSX"
 
     - name: Install additional homebrew cask packages, if any
-      command: brew cask install {{ item }}
+      command: brew install {{ item }}
       loop: "{{ additional_cask_packages }}"
       when:
         - ansible_distribution == "MacOSX"
         - additional_cask_packages is defined
 
     - name: Add antivirus as homebrew cask package
-      command: brew cask install {{ homebrew_cask_antivirus }}
+      command: brew install {{ homebrew_cask_antivirus }}
       when:
         - ansible_distribution == "MacOSX"
         - homebrew_cask_antivirus is defined
@@ -203,7 +205,7 @@
       ignore_errors: yes
 
     - name: Add password vault as homebrew cask package
-      command: brew cask install {{ homebrew_cask_password_vault }}
+      command: brew install {{ homebrew_cask_password_vault }}
       when:
         - ansible_distribution == "MacOSX"
         - homebrew_cask_password_vault is defined
@@ -344,6 +346,11 @@
       when:
         - shell == "fish"
 
+    - name: Check if file exists
+      stat:
+        path: "{{ansible_env.HOME}}/.oh-my-zsh"
+      register: oh_my_zsh
+
     - name: Add oh-my-zsh
       block:
         - name: Get installer
@@ -355,6 +362,7 @@
           command: sh {{ansible_env.HOME}}/ohmyzsh_install -y --noninteractive
       when:
         - shell == "zsh"
+        - not oh_my_zsh.stat.exists
 
     - name: Make sure ~/bin is in PATH
       lineinfile: dest={{ansible_env.HOME}}/.bashrc regexp="^export PATH=.*{{personal_bin}}" line='export PATH={{personal_bin}}:$PATH'
@@ -371,7 +379,7 @@
         - name: Install Java environment chooser
           command: brew install jenv
         - name: Install JDK8
-          command: brew cask install adoptopenjdk/openjdk/adoptopenjdk8
+          command: brew install adoptopenjdk/openjdk/adoptopenjdk8
         - name: Add jenv to path
           lineinfile: dest={{ansible_env.HOME}}/.config/fish/config.fish regexp='^set -x PATH $HOME/.jenv/bin $PATH' line='set -x PATH $HOME/.jenv/bin $PATH'
           when: shell == "fish"
@@ -459,11 +467,11 @@
         - name: Add homebrew cask for fonts
           command: brew tap homebrew/cask-fonts
         - name: Install the hack nerd font
-          command: brew cask install font-hack-nerd-font
+          command: brew install --cask font-hack-nerd-font
         # - name: Install the hack font
-        #   command: brew cask install font-lekton-nerd-font
+        #   command: brew install font-lekton-nerd-font
         # - name: Install the hack font
-        #   command: brew cask install font-ubuntumono-nerd-font
+        #   command: brew install font-ubuntumono-nerd-font
       when:
         - ansible_distribution == "MacOSX"
         - get_fonts
