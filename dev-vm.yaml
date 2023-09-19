@@ -9,11 +9,13 @@
       - curl
       - gzip
       - pbzip2
+      - parallel
       - unzip
       - vim
       - git
       - zip
       - sudo
+      - webp
     homebrew_package_list:
       - awscli
       - bash-completion
@@ -23,14 +25,17 @@
       - gnu-tar
       - go
       - gpg
+      - imagemagick
       - kubectl
       - mas
       - node
       - obsidian
+      - parallel
       - pinentry-mac
       - pyenv
       - thefuck
       - tmux
+      - webp
       - wget
       - watch
       - webp
