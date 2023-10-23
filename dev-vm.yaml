@@ -65,6 +65,7 @@
       # Every now and then, have to edit an image
       #- gimp # gimp is pretty tricky.
       - krita
+      - inkscape
       # Misc:
       - evernote
       - vlc
